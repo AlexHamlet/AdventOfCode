@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+
+#Open the input file
+file = open("input")
+
+#Read in the entire input file
+input = file.read();
+file.close();
+
+#Initialize the starting floor
+floor = 0
+
+#Loop through the symbols and modify the floor variable
+for x in input:
+    if(x == '('):
+        floor += 1
+    if(x == ')'):
+        floor -= 1
+
+#Print the result (final floor after input string)
+print(floor)

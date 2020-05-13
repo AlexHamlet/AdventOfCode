@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+#Read contents of input
+file = open("input")
+input = file.readlines()
+file.close()
+
+#Initialize wrapping paper quantity
+paper = 0
+
+#Calculate Quantity Required
+for present in input:
+    #Split input string
+    dim = list(map(int, present.split('x')))
+    #find side areas
+    size = [dim[0]*dim[1], dim[1]*dim[2], dim[0]*dim[2]]
+    #sort side areas (to find smallest)
+    size.sort()
+    #increase paper needed by all sides + smallest side
+    paper += sum(size)*2+size[0]
+
+#Print Result
+print(paper)
