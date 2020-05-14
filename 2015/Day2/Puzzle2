@@ -7,7 +7,7 @@ file = open("input")
 input = file.readlines()
 file.close()
 
-#Initialize wrapping paper quantity
+#Initialize ribbon quantity
 paper = 0
 
 #Calculate Quantity Required

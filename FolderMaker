@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+
+#Creates Folders for Day1-Day25 with an input file and two Puzzle files
+#Puzzle files are created with a python3 shebang
+
+import os, sys, pathlib
+
+#Check for Arguments
+if(len(sys.argv) != 2):
+    print("Usage: ./FolderMaker FilePath")
+
+#Create the path and folders for all 25 Days
+for p in range(1, 26):
+    #Create Directory
+    pathlib.Path(sys.argv[1]+"Day"+str(p)).mkdir(parents=True, exist_ok=True)
+    for s in range (1, 3):
+        #Creates Puzzle files and adds a shebang
+        file = open(sys.argv[1]+"Day"+str(p)+"/Puzzle"+str(s), 'w+')
+        os.chmod(sys.argv[1]+"Day"+str(p)+"/Puzzle"+str(s), 0o777)
+        file.write("#!/usr/bin/python3")
+        file.close()
+    #Creates input file
+    file = open(sys.argv[1]+"Day"+str(p)+"/input", 'w+')
+    file.write("Replace this string with your input!")
+    file.close()
