@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+import functools as ft
+
+#Read contents of input
+file = open("input")
+input = file.readlines()
+file.close()
+
+#Initialize wrapping paper quantity
+paper = 0
+
+#Calculate Quantity Required
+for present in input:
+    #Split input string
+    dim = list(map(int, present.split('x')))
+    dim.sort()
+    #increase ribbon needed
+    paper += dim[0]*2+dim[1]*2+ft.reduce(lambda x,y : x*y, dim)
+
+#Print Result
+print(paper)
