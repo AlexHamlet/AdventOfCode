@@ -1,0 +1,72 @@
+#!/usr/bin/python3#!/usr/bin/python3
+
+#Read in all instructions
+file = open("input")
+input = file.read()
+file.close()
+
+#Init position and visited
+visited = [0]
+x = y = rX = rY = 0
+
+#A Binary Tree implementation to keep track of visited houses
+class Node:
+
+    def __init__(self, data, visited):
+
+        self.left = None
+        self.right = None
+        self.data = data
+        visited[0] += 1
+
+    def insert(self, data, visited):
+# Compare the new value with the parent node
+        if self.data:
+            if data < self.data:
+                if self.left is None:
+                    self.left = Node(data, visited)
+                else:
+                    self.left.insert(data, visited)
+            elif data > self.data:
+                if self.right is None:
+                    self.right = Node(data, visited)
+                else:
+                    self.right.insert(data, visited)
+        else:
+            self.data = data
+
+#Init Binary tree
+root = Node([x,y], visited)
+
+#Iterate through instruction set, add points to binary tree
+#Either modify Santa Coordinates or RSanta Coordinates and inster node
+Santa = True
+for char in input:
+    if(char == '>'):
+        if(Santa):
+            x += 1
+        else:
+            rX += 1
+    if(char == '<'):
+        if(Santa):
+            x -= 1
+        else:
+            rX -= 1
+    if(char == "v"):
+        if(Santa):
+            y += 1
+        else:
+            rY += 1
+    if(char == '^'):
+        if(Santa):
+            y -= 1
+        else:
+            rY -= 1
+    if(Santa):
+        root.insert([x,y], visited)
+    else:
+        root.insert([rX, rY], visited)
+    Santa = not Santa
+
+#Print Number of houses visited
+print(visited)

@@ -1,0 +1,54 @@
+#!/usr/bin/python3
+
+#Read in all instructions
+file = open("input")
+input = file.read()
+file.close()
+
+#Init position and visited
+visited = [0]
+x = y = 0
+
+#A Binary Tree implementation to keep track of visited houses
+class Node:
+
+    def __init__(self, data, visited):
+
+        self.left = None
+        self.right = None
+        self.data = data
+        visited[0] += 1
+
+    def insert(self, data, visited):
+# Compare the new value with the parent node
+        if self.data:
+            if data < self.data:
+                if self.left is None:
+                    self.left = Node(data, visited)
+                else:
+                    self.left.insert(data, visited)
+            elif data > self.data:
+                if self.right is None:
+                    self.right = Node(data, visited)
+                else:
+                    self.right.insert(data, visited)
+        else:
+            self.data = data
+
+#Init Binary tree
+root = Node([x,y], visited)
+
+#Iterate through instruction set, add points to binary tree
+for char in input:
+    if(char == '>'):
+        x += 1
+    if(char == '<'):
+        x -= 1
+    if(char == "v"):
+        y -= 1
+    if(char == '^'):
+        y += 1
+    root.insert([x,y], visited)
+
+#Print Number of houses visited
+print(visited)
