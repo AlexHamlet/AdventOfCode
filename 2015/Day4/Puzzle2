@@ -1,1 +1,19 @@
 #!/usr/bin/python3
+
+import hashlib
+
+file = open('input')
+input = file.readline()
+file.close()
+
+#Try every number from zero
+num = 0
+while(True):
+    attempt = input + str(num)
+    hash = hashlib.md5(attempt.encode())
+    #Check for leading 0's
+    if(hash.hexdigest().startswith("000000")):
+        print(hash.hexdigest())
+        print(num)
+        break
+    num += 1

@@ -1,1 +1,47 @@
 #!/usr/bin/python3
+
+import re
+
+#Used to check words for substrings
+def contains():
+    for word in naughty:
+        if word in p:
+            return True
+
+file = open('input')
+input = file.readlines()
+file.close()
+
+#Three Vowels
+#Double letter
+#No ab, cd, pq, xy
+
+#Init count
+count = 0
+
+#Naughty list
+naughty = ["ab", "cd", "pq", "xy"]
+
+#Check double letters
+regexp = re.compile(r"(.)\1")
+
+#Loop throug all words
+for p in input:
+    #If word in naughty list, continue
+    if(contains()):
+        continue
+    #If word doesn't contain a double letter continue
+    if(not re.search(regexp, p)):
+        continue
+    #Count Vowels
+    vowelCount = 0
+    vowelCount += p.count("a");
+    vowelCount += p.count("e");
+    vowelCount += p.count("i");
+    vowelCount += p.count("o");
+    vowelCount += p.count("u");
+    if(vowelCount >= 3):
+        count += 1
+
+#Print Nice count
+print(count)

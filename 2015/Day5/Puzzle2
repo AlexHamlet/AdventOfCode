@@ -1,1 +1,32 @@
 #!/usr/bin/python3
+
+import re
+
+file = open('input')
+input = file.readlines()
+file.close()
+
+#Three Vowels
+#Double letter
+#No ab, cd, pq, xy
+
+#Init count
+count = 0
+
+#Check double letters
+regexp = re.compile(r"(..).*\1")
+#Checks for letter sandwich
+regexp2 = re.compile(r"(.).\1")
+
+#Loop throug all words
+for p in input:
+    #Checks for repeat letter combos
+    if(not re.search(regexp, p)):
+        continue
+    #Checks for letter in the middle
+    if(not re.search(regexp2, p)):
+        continue
+    count += 1
+
+#Print Nice count
+print(count)
