@@ -1,1 +1,59 @@
 #!/usr/bin/python3
+
+import re
+
+file = open('input')
+input = file.readlines()
+file.close()
+
+#regex to determine actions
+on = re.compile("on")
+off = re.compile("off")
+toggle = re.compile("toggle")
+
+#rectangle coordinates and array
+lights = [[0 for p in range(1000)] for s in range(1000)]
+x1=x2=y1=y2=0
+
+#Read each instruction
+for line in input:
+    #Split line by spaces
+    findrect = line.split(" ")
+    #Turn on
+    if(re.search(on, line)):
+        #Get x and y coordinates
+        [x1,y1] = findrect[2].split(",")
+        [x2,y2] = findrect[4].split(",")
+        #Increase 1
+        for p in range(int(x1), int(x2) + 1):
+            for s in range(int(y1), int(y2) + 1):
+                lights[p][s] += 1
+    #Turn off
+    if(re.search(off, line)):
+        #Get x and y coordinates
+        [x1,y1] = findrect[2].split(",")
+        [x2,y2] = findrect[4].split(",")
+        #Decrease 1
+        for p in range(int(x1), int(x2) + 1):
+            for s in range(int(y1), int(y2) + 1):
+                #Check to see if light is off
+                if(lights[p][s] > 0):
+                    lights[p][s] -= 1
+    #Toggle
+    if(re.search(toggle, line)):
+        #Get x and y coordinates
+        [x1,y1] = findrect[1].split(",")
+        [x2,y2] = findrect[3].split(",")
+        #Increase 2
+        for p in range(int(x1), int(x2) + 1):
+            for s in range(int(y1), int(y2) + 1):
+                lights[p][s] += 2
+
+#Count brightness
+count = 0
+for p in range(1000):
+    for s in range(1000):
+        count += lights[p][s]
+
+#Print result
+print(count)
