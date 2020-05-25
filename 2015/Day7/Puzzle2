@@ -1,6 +1,97 @@
 #!/usr/bin/python3
 
+import re
+
 file = open('input')
 input = file.readlines()
 file.close()
 
+#Regular expressions for instructions
+iand = re.compile("AND")
+ior = re.compile("OR")
+inot = re.compile("NOT")
+irshift = re.compile("RSHIFT")
+ilshift = re.compile("LSHIFT")
+inumber = re.compile("[0-9]")
+
+#init dicationary
+wireDict = {}
+
+#Continue until we get an answer
+while wireDict.get('a') == None:
+    for p in input:
+        #Remove newline characters
+        rmnewline = p.rstrip()
+        #Split on spaces
+        line = rmnewline.split(" ")
+
+        if(line[2] == 'b'):
+            wireDict['b'] = 16076
+            continue
+
+        #If the length is 3, we know there is no operation(just put the value in)
+        if(len(line) == 3):
+            #If it is a number, just put it in.
+            if(re.search(inumber, line[0])):
+                wireDict[line[2]] = int(line[0])
+                print(p)
+                print(wireDict[line[2]])
+                input.remove(p)
+            else:
+                #Otherwise, check to see if the variable is set
+                if(wireDict.get(line[0]) != None):
+                    wireDict[line[2]] = wireDict[line[0]]
+                    print(p)
+                    print(wireDict[line[2]])
+                    input.remove(p)
+        else:
+            #Check for the AND function
+            if(re.search(iand, p)):
+                #check if both variables are set
+                if(wireDict.get(line[0]) != None and wireDict.get(line[2]) != None):
+                    wireDict[line[4]] = (wireDict[line[0]] & wireDict[line[2]]) % 65536
+                    print(p)
+                    print(wireDict[line[4]])
+                    input.remove(p)
+                else:
+                    #Check if the first argument is a number
+                    if(re.search(inumber, line[0]) and wireDict.get(line[2]) != None):
+                        wireDict[line[4]] = (int(line[0]) & wireDict[line[2]]) % 65536
+                        print(p)
+                        print(wireDict[line[4]])
+                        input.remove(p)
+            #Check for the OR function
+            if(re.search(ior, p)):
+                #Check if both variables are set
+                if(wireDict.get(line[0]) != None and wireDict.get(line[2]) != None):
+                    wireDict[line[4]] = (wireDict[line[0]] | wireDict[line[2]]) % 65536
+                    print(p)
+                    print(wireDict[line[4]])
+                    input.remove(p)
+            #Check for the NOT function
+            if(re.search(inot, p)):
+                #Ensure variable is set
+                if(wireDict.get(line[1]) != None):
+                    wireDict[line[3]] = ~int(wireDict[line[1]]) % 65536
+                    print(p)
+                    print(wireDict[line[3]])
+                    input.remove(p)
+            #Check for RSHIFT function
+            if(re.search(irshift, p)):
+                #Ensure variable is set
+                if(wireDict.get(line[0]) != None):
+                    wireDict[line[4]] = (wireDict[line[0]] >> int(line[2])) % 65536
+                    print(p)
+                    print(wireDict[line[4]])
+                    input.remove(p)
+            #
+            if(re.search(ilshift, p)):
+                if(wireDict.get(line[0]) != None):
+                    wireDict[line[4]] = (wireDict[line[0]] << int(line[2])) % 65536
+                    print(p)
+                    print(wireDict[line[4]])
+                    input.remove(p)
+
+print(wireDict)
+#print value in a
+print('A:' + str(wireDict.get('a')))

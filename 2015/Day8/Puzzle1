@@ -1,1 +1,22 @@
 #!/usr/bin/python3
+
+import re
+
+file = open('input')
+input = file.readlines()
+file.close()
+
+hexes = re.compile(r"\\x")
+escape = re.compile(r"\\.")
+
+total = 0
+fixedTotal = 0
+
+for line in input:
+    fixedTotal += len(line)
+    total += len(line) - 2
+    total -= len(re.findall(hexes, line)) * 3
+    total -= len(re.findall(escape, line))
+    print(line)
+
+print(fixedTotal - total)

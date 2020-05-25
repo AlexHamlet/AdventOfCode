@@ -1,1 +1,17 @@
 #!/usr/bin/python3
+
+from ast import literal_eval
+
+file = open('input')
+input = file.readlines()
+file.close()
+
+total = 0
+fixedTotal = 0
+
+for line in input:
+    fixedTotal += len(literal_eval(line))
+    total += len(line)
+    print(literal_eval(line))
+
+print(total - fixedTotal)
