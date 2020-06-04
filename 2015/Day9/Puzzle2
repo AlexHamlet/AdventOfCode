@@ -1,1 +1,6 @@
 #!/usr/bin/python3
+
+#Read in file
+file = open('input')
+input = file.readlines()
+file.close()

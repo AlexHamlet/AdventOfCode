@@ -1,17 +1,6 @@
 #!/usr/bin/python3
 
-from ast import literal_eval
+#Unable to complete Day 8
+#My input doesn't give the expected answer so I cannot unlock part two.
 
-file = open('input')
-input = file.readlines()
-file.close()
-
-total = 0
-fixedTotal = 0
-
-for line in input:
-    fixedTotal += len(literal_eval(line))
-    total += len(line)
-    print(literal_eval(line))
-
-print(total - fixedTotal)
+print(":(")

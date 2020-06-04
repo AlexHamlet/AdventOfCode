@@ -1,22 +1,29 @@
 #!/usr/bin/python3
 
-import re
-
+#Read in file
 file = open('input')
 input = file.readlines()
 file.close()
 
-hexes = re.compile(r"\\x")
-escape = re.compile(r"\\.")
-
+#initialize counts
 total = 0
 fixedTotal = 0
 
+#iterate over input
 for line in input:
-    fixedTotal += len(line)
-    total += len(line) - 2
-    total -= len(re.findall(hexes, line)) * 3
-    total -= len(re.findall(escape, line))
-    print(line)
+    #banish newline charaters
+    line = line.strip()
+    #count chars raw and evaluated
+    total += len(line)
+    fixedTotal += len(eval(line))
 
-print(fixedTotal - total)
+#Print result
+print(total - fixedTotal)
+
+#Someone else's answer
+#I've decided that my input may be tainted
+#I've ensured that my input is all accounted for
+#still I get the same answer.  This solution provides the
+#same answer given it is fed a newline at the end
+#I must move on, I've made no progress for about a week.
+print(sum(len(s[:-1]) - len(eval(s)) for s in open('input')))

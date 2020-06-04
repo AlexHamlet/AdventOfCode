@@ -1,1 +1,15 @@
 #!/usr/bin/python3
+
+#Read in file
+#file = open('input')
+#input = file.readlines()
+#file.close()
+
+#Taking a break to learn import statements.
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+#sys.path.insert(1, '/home/alex/AdventOfCode/HelpfulFiles')
+
+import mymodule as mm
+
+mm.greeting("Alex")
