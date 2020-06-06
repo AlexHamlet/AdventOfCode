@@ -1,6 +1,58 @@
 #!/usr/bin/python3
 
-#Read in file
-file = open('input')
-input = file.readlines()
-file.close()
+#Ensure the correct path is passed to Graph
+import os
+#Import an EdgeWeightedSymbolDiGraph
+from Graphs import ESDGraph as esdg
+
+#Create the graph
+g = esdg()
+g.GraphFromFile(os.path.join(os.getcwd(), "input"))
+print(g)
+
+#Traveling salesman (Greedy Algorithm)
+#set best dist and visited
+best = -1
+visited = {}
+
+#Start at every element
+for p in g.adj:
+    #Reset Current and visited
+    current = 0
+    for key in g.adj:
+        visited[key] = False
+
+    #Start with p
+    next = p
+    tempnext = ""
+    #Run greedy until impossible
+    while not next == "":
+        #Store shortest path in tempnext
+        for key in g.adj[next]:
+            #if tempnext is empty or worse change it
+            if(tempnext == "" or int(g.adj[next][key]) > int(g.adj[next][tempnext])):
+                #Ensure it has not yet been visited
+                if(visited[key] == False):
+                    tempnext = key
+        #Add dist to current and reassign next
+        current += int(g.adj[next][tempnext])
+        visited[next] = True
+        next = tempnext
+        tempnext = ""
+
+        #Check to see if path exists
+        trapped = True
+        for key in g.adj[next]:
+            if not visited[key]:
+                trapped = False
+        #If trapped exit while
+        if trapped:
+            next = ""
+    #Ensure all verticies were visited
+    if False in visited:
+        continue
+    #If all vertices were visited assign best
+    if best == -1 or best < current:
+        best = current
+
+print(best)
