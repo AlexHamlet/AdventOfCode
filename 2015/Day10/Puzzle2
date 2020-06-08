@@ -1,1 +1,29 @@
 #!/usr/bin/python3
+
+#Read input
+file = open('input')
+input = file.read()
+file.close()
+
+#Run 50 times
+for p in range(50):
+    #Set answer string, last character, and count to init values
+    ans = ''
+    last = '-1'
+    count = 0
+    #loop over string
+    for s in range(len(input)):
+        #New number reset count
+        if not input[s] == last:
+            last = input[s]
+            count = 1
+        #Same Number increase count
+        else:
+            count += 1
+        #Last number in series, appent to answer string
+        if len(input) == s+1 or not input[s + 1] == last:
+            ans += str(count)+input[s]
+    #Assign input for next iteration
+    input = ans
+#Print length of answer
+print(len(input))

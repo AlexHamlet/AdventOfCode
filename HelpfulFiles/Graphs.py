@@ -55,8 +55,8 @@ class ESDGraph:
             con = re.split(delim, line.replace(" ", "").strip())
             self.addVertice(con[0])
             self.addVertice(con[1])
-            self.addEdge(con[0], con[1], con[2])
-            self.addEdge(con[1], con[0], con[2])
+            self.addEdge(con[0], con[1], int(con[2]))
+            self.addEdge(con[1], con[0], int(con[2]))
 
     #Prints a tiered list of Vertices, Adjacencies, and Weights
     def __str__(self):
