@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #Read input
-file = open('input2')
+file = open('input')
 input = file.read()
 file.close()
 
