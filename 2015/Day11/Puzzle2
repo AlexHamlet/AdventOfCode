@@ -1,6 +1,78 @@
 #!/usr/bin/python3
 
 #Read input
-file = open('input')
+file = open('input2')
 input = file.read()
 file.close()
+
+#Ascii offset of 'a'
+offset = 97
+
+password = []
+
+#Convert string into ascii value
+for c in input:
+    password.append(ord(c) - offset)
+
+flag = 0
+while not flag == 2:
+
+    #Increment
+    index = len(password)-1
+    while True:
+        password[index] += 1
+        password[index] %= 26
+        if not password[index] == 0:
+            break
+        index -= 1
+        if index == -1:
+            password.insert(0,0)
+    #Validate
+    #Check for i, o, or l
+    badflag = False
+    bad = ['i','o','l']
+    #convert to ints
+    for x in range(len(bad)):
+        bad[x] = ord(bad[x]) - offset
+    #Check password list
+    for x in range(len(password)):
+        while password[x] in bad:
+            password[x] += 1
+            for s in range(x + 1,len(password)):
+                password[s] = 0
+    if badflag:
+        continue
+
+    #Three increasing letters
+    incflag = False
+    count = 0
+    for x in range(len(password) - 1):
+        if(password[x] + 1 == password[x + 1]):
+            count += 1
+            if count == 2:
+                incflag = True
+                break
+        else:
+            count = 0
+    if not incflag:
+        continue
+
+    #double letters
+    skipflag = False
+    doublecount = 0
+    for x in range(len(password) - 1):
+        if skipflag:
+            skipflag = False
+            continue
+        if password[x] == password[x + 1]:
+            doublecount += 1
+            skipflag = True
+    if doublecount < 2:
+        continue
+
+    flag += 1
+
+#Print password
+for p in password:
+    print(chr(p+offset), end="")
+print('')
