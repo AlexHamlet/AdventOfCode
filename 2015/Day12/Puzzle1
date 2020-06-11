@@ -1,1 +1,18 @@
 #!/usr/bin/python3
+
+#Read input
+file = open('input')
+input = file.read()
+file.close()
+
+import re
+
+#Regex to find all numbers
+num = re.compile("-?[0-9]+")
+sum = 0
+
+#Add all numbers in input
+for x in re.findall(num, input):
+    sum += int(x)
+
+print(sum)
