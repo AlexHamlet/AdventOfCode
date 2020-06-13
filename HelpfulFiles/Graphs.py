@@ -58,6 +58,14 @@ class ESDGraph:
             self.addEdge(con[0], con[1], int(con[2]))
             self.addEdge(con[1], con[0], int(con[2]))
 
+    def GraphFromDict(self, data):
+        for p in data:
+            self.addVertice(p)
+            for s in data[p]:
+                self.addVertice(s)
+                self.addEdge(p,s,data[p][s] + data[s][p])
+                self.addEdge(s,p,data[p][s] + data[s][p])
+
     #Prints a tiered list of Vertices, Adjacencies, and Weights
     def __str__(self):
         retstr = f"{self.V} Vertices, {self.E} edges\n"
