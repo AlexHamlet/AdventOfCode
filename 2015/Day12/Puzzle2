@@ -1,6 +1,36 @@
 #!/usr/bin/python3
 
+import json
+
 #Read input
 file = open('input')
-input = file.read()
+inp = json.load(file)
 file.close()
+
+#Init sum
+sum = 0
+
+#Recursively delve into json object
+def recurse(inp):
+    #If dict check for red and stop, else recurse
+    if isinstance(inp, dict):
+        if inp.get('red') != None or 'red' in inp.values():
+            return
+        for x in inp:
+            recurse(inp[x])
+    #If list recurse
+    elif isinstance(inp, list):
+        for x in inp:
+            recurse(x)
+    #Else add numbers
+    else:
+        try:
+            global sum
+            sum += int(inp)
+        except:
+            pass
+
+#Begin Recursion
+recurse(inp)
+#Print sum
+print(sum)
