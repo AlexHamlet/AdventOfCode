@@ -1,1 +1,63 @@
 #!/usr/bin/python3
+
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Read data into a nested dictionary
+data = {}
+
+for p in inp:
+    p = p.split(' ')
+    if p[2] == 'lose':
+        p[3] = int(p[3]) * -1
+    if not data.get(p[0]):
+        data[p[0]] = {p[10].strip()[:-1]:int(p[3])}
+    else:
+        data[p[0]][p[10].strip()[:-1]] = int(p[3])
+
+from Graphs import ESDGraph as esdg
+
+#Setup Breadth first search
+def BFS(v):
+    #Collect path lengths
+    pathlen = []
+    #Create visited Dictionary
+    visit = {}
+    for x in g.adj:
+        visit[x] = 0
+    visit[v] = 1
+    #Call Recursive Method
+    rBFS(v,visit, f"{v}", 0, pathlen)
+    #Return longest distance
+    return max(pathlen)
+
+#Recursive Breadth First Search Method
+def rBFS(v, visit, path, pathVal, pathlen):
+    #Copy visited array (prevent two paths sharing an array)
+    visited = visit.copy()
+    #Visit Vertice
+    visited[v] += 1
+    #Recurse on unvisited vertices
+    for p in g.adj[v]:
+        if not visited[p]:
+            rBFS(p, visited, path + f" -> {p}", pathVal + g.adj[v][p], pathlen)
+    #Append pathlength when finished
+    if 0 not in visited.values():
+        #Return to beginning
+        for x in visited:
+            if visited[x] == 2:
+                pathVal += g.adj[v][x]
+        pathlen.append(pathVal)
+
+
+#Create the graph
+g = esdg()
+g.GraphFromDict(data)
+
+#Store path lengths from BFS
+lenlist = []
+for p in g.adj:
+    lenlist.append(BFS(p))
+#Show largest path length
+print(max(lenlist))
