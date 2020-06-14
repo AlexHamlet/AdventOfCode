@@ -1,1 +1,32 @@
 #!/usr/bin/python3
+
+#Read input
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Init Reindeer data. Name, speed, endurance, rest
+reindeer = {}
+
+for p in inp:
+    p = p.split(" ")
+    reindeer[p[0]] = [int(p[3]),int(p[6]),int(p[13])]
+
+#Init time
+time = 2503
+
+#Init important variables
+cycletime = 0
+speed = 0
+runtime = 0
+dist = []
+
+#Calculate distance
+for p in reindeer:
+    cycletime = reindeer[p][1] + reindeer[p][2]
+    speed = reindeer[p][0]
+    runtime = reindeer[p][1]
+    dist.append((int(time/cycletime) * speed * runtime) + (runtime * speed if (time%cycletime) > runtime else (time%cycletime) * speed))
+
+#Print longest distance
+print(max(dist))
