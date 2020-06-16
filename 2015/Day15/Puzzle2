@@ -1,1 +1,57 @@
 #!/usr/bin/python3
+
+file = open('input')
+inp = file.readlines()
+file.close()
+
+ingredients = {}
+
+#Get ingredients and their properties
+for p in inp:
+    p = p.split(' ')
+    ing = p[0][:-1]
+    ingredients[ing] = {}
+    ingredients[ing]['capacity'] = int(p[2][:-1])
+    ingredients[ing]['durability'] = int(p[4][:-1])
+    ingredients[ing]['texture'] = int(p[6][:-1])
+    ingredients[ing]['flavor'] = int(p[8][:-1])
+    ingredients[ing]['calories'] = int(p[10])
+
+full = 100
+best = 0
+propval = {'capacity':0,'durability':0,'texture':0,'flavor':0, 'calories':0}
+inglist = list(ingredients)
+proplist = list(ingredients[inglist[0]])
+
+#Try each combination of ingredients
+for p in range(full):
+    for s in range(full-p):
+        for t in range(full-s):
+            for f in range(full-t):
+                #Ensure 100 teaspoons
+                if not p + s + t + f == 100:
+                    continue
+                #Reset property values
+                propval = {'capacity':0,'durability':0,'texture':0,'flavor':0, 'calories':0}
+                #Get property values
+                currentval = 1
+                ingquantity = [p,s,t,f]
+                for ingcount in range(len(inglist)):
+                    for propcount in range(len(proplist)):
+                        propval[proplist[propcount]] += ingquantity[ingcount] * ingredients[inglist[ingcount]][proplist[propcount]]
+                #Check for negative/zero values
+                valid = True
+                for i in propval:
+                    if propval[i] <= 0:
+                        valid = False
+                    #Calculate currentval
+                    if not i == 'calories':
+                        currentval *= propval[i]
+                #Skip iterations of value 0 or calories not 500
+                if not valid or not propval['calories'] == 500:
+                    continue
+                #Replace best with current
+                elif currentval > best:
+                    best = currentval
+
+print(best)
