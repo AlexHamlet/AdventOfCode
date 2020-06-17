@@ -1,1 +1,30 @@
 #!/usr/bin/python3
+
+import itertools
+
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Total egg nog
+nog = 150
+
+#Init container values
+containers = []
+for p in inp:
+    containers.append(int(p))
+containers.sort(reverse = True)
+
+#View all combinations
+comb = []
+for p in range(1,len(containers) + 1):
+    comb.append(list(itertools.combinations(containers,p)))
+
+#Check combinations for correct value
+count = 0
+for p in comb:
+    for s in p:
+        if sum(s) == nog:
+            count += 1
+
+print(count)
