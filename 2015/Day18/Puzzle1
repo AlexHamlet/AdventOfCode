@@ -1,1 +1,45 @@
 #!/usr/bin/python3
+
+#Read input
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Init lights
+lights = []
+for p in range(len(inp)):
+    lights.append([])
+    for s in inp[p].strip():
+        lights[p].append(1 if s == '#' else 0)
+
+#Find next pattern
+ubound = len(lights)-1
+lbound = 0
+for times in range(100):
+    newlights = [[0 for s in range(len(lights[0]))] for p in range(len(lights))]
+    for p in range(len(lights)):
+        for s in range(len(lights[0])):
+            #Check surrounding lights
+            oncount = 0
+            for t in range(-1,2):
+                for f in range(-1,2):
+                    #   Don't count same square     #Check vertical bounds          #Check Horizontal bounds
+                    if not (t == 0 and f == 0) and (lbound <= p + t <= ubound) and (lbound <= s + f <= ubound):
+                        if lights[p + t][s + f]:
+                            oncount += 1
+            #Check for new light status
+            if lights[p][s] and oncount in (2,3):
+                newlights[p][s] = 1
+            if lights[p][s] == 0 and oncount == 3:
+                newlights[p][s] = 1
+    #Update Lights
+    lights = newlights
+
+#Print light count:
+count = 0
+for p in lights:
+    for s in p:
+        if s:
+            count += 1
+
+print(count)
