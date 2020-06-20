@@ -1,1 +1,92 @@
 #!/usr/bin/python3
+
+#I recognize this as a Regular Grammar
+#This code works for miniscule examples
+#I must do additional research to find an optimal algorithm
+#to solve the rest of the problem
+
+import re
+
+#Read in file
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#GeeksForGeeks Priority Queue implementation
+# A simple implementation of Priority Queue
+# using Queue.
+class PriorityQueue(object):
+    def __init__(self):
+        self.queue = []
+
+    def __str__(self):
+        return ' '.join([str(i) for i in self.queue])
+
+    # for checking if the queue is empty
+    def isEmpty(self):
+        return len(self.queue) == 0
+
+    # for inserting an element in the queue
+    def insert(self, data):
+        flag = False
+        for p in self.queue:
+            if data[0] == p[0]:
+                flag = True
+        if not flag:
+            self.queue.append(data)
+
+    # for popping an element based on Priority
+    def delete(self):
+        try:
+            min = 0
+            for i in range(len(self.queue)):
+                if self.queue[i][1] < self.queue[min][1]:
+                    min = i
+            item = self.queue[min]
+            del self.queue[min]
+            return item
+        except IndexError:
+            print("Nothing to delete")
+            exit()
+
+#Init Replacements and input string
+#Reverse Replacements
+Replacements = {}
+inpstring = ""
+for p in inp:
+    if '=>' in p:
+        p = p.split(' ')
+        if Replacements.get(p[2].strip()) == None:
+            Replacements[p[2].strip()] = []
+        Replacements[p[2].strip()].append(p[0].strip())
+    else:
+        inpstring = p.strip()
+
+#Prepare result set
+Results = PriorityQueue()
+
+#Begin with inpstring
+Results.insert((inpstring, 0))
+
+
+#Loop through until found
+found = False
+while not found:
+    current = Results.delete()
+    #Look at all possible replacements
+    for p in Replacements:
+        #find all occurences of possible replacements
+        occurences = [m.start() for m in re.finditer(p, current[0])]
+        #Loop through and add all posibilities to the set
+        for s in range(len(occurences)):
+            #Split and replace
+            start = current[0][:occurences[s]]
+            end = current[0][occurences[s]:]
+            for t in Replacements[p]:
+                result = start + end.replace(p, t, 1)
+                Results.insert((result, current[1] + 1))
+                if result == 'e':
+                    found = True
+                    #Print Result
+                    print(current[1] + 1)
+#print number of possible replacements

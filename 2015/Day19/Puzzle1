@@ -1,1 +1,39 @@
 #!/usr/bin/python3
+
+import re
+
+#Read in file
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Init Replacements and input string
+Replacements = {}
+inpstring = ""
+for p in inp:
+    if '=>' in p:
+        p = p.split(' ')
+        if Replacements.get(p[0]) == None:
+            Replacements[p[0]] = []
+        Replacements[p[0]].append(p[2].strip())
+    else:
+        inpstring = p.strip()
+
+#Prepare result set
+Results = set()
+
+#Look at all possible replacements
+for p in Replacements:
+    #find all occurences of possible replacements
+    occurences = [m.start() for m in re.finditer(p, inpstring)]
+    #Loop through and add all posibilities to the set
+    for s in range(len(occurences)):
+        #Split and replace
+        start = inpstring[:occurences[s]]
+        end = inpstring[occurences[s]:]
+        for t in Replacements[p]:
+            result = start + end.replace(p, t, 1)
+            Results.add(result)
+
+#print number of possible replacements
+print(len(Results))
