@@ -1,92 +1,50 @@
 #!/usr/bin/python3
 
-#I recognize this as a Regular Grammar
-#This code works for miniscule examples
-#I must do additional research to find an optimal algorithm
-#to solve the rest of the problem
+#Thanks to u/askalski on Reddit for the excellent explanation
 
+#Notes for this Grammar
+#Rn, Y, Ar - Terminal Elements
+
+#Map
+#Rn -> (
+#Y -> ,
+#Ar -> )
+
+#Each producion results in one of these
+#X => XX | X(X) | X(X,X) | X(X,X,X)
+
+#If we have all X, it takes count(element) - 1 steps
+
+#If we have X(X) it takes one production to get there, so count(element) - count(parenthesis) - 1
+
+#If we have X(X,X) or X(X,X,X) they both take one production
+#The commas, signify that itself and the next element dont count towards the total steps
+#simplified count(elements) - count(parenthesis) - 2*count(commas) - 1
+
+#Now in Python!
 import re
 
-#Read in file
 file = open('input')
 inp = file.readlines()
 file.close()
 
-#GeeksForGeeks Priority Queue implementation
-# A simple implementation of Priority Queue
-# using Queue.
-class PriorityQueue(object):
-    def __init__(self):
-        self.queue = []
+NonTerminals = set()
+inpstring = ''
 
-    def __str__(self):
-        return ' '.join([str(i) for i in self.queue])
-
-    # for checking if the queue is empty
-    def isEmpty(self):
-        return len(self.queue) == 0
-
-    # for inserting an element in the queue
-    def insert(self, data):
-        flag = False
-        for p in self.queue:
-            if data[0] == p[0]:
-                flag = True
-        if not flag:
-            self.queue.append(data)
-
-    # for popping an element based on Priority
-    def delete(self):
-        try:
-            min = 0
-            for i in range(len(self.queue)):
-                if self.queue[i][1] < self.queue[min][1]:
-                    min = i
-            item = self.queue[min]
-            del self.queue[min]
-            return item
-        except IndexError:
-            print("Nothing to delete")
-            exit()
-
-#Init Replacements and input string
-#Reverse Replacements
-Replacements = {}
-inpstring = ""
+#Collect NonTerminals and input from file
 for p in inp:
     if '=>' in p:
-        p = p.split(' ')
-        if Replacements.get(p[2].strip()) == None:
-            Replacements[p[2].strip()] = []
-        Replacements[p[2].strip()].append(p[0].strip())
+        NonTerminals.add(p.split(' ')[0])
     else:
         inpstring = p.strip()
 
-#Prepare result set
-Results = PriorityQueue()
+elementfinder = re.compile('[A-Z]')
 
-#Begin with inpstring
-Results.insert((inpstring, 0))
+#Find total element count
+totalelem = len(re.findall(elementfinder, inpstring))
+#Find parenthesis
+totalparen = len(re.findall('(Ar)|(Rn)', inpstring))
+#Find commas
+totalcomma = len(re.findall('Y', inpstring))
 
-
-#Loop through until found
-found = False
-while not found:
-    current = Results.delete()
-    #Look at all possible replacements
-    for p in Replacements:
-        #find all occurences of possible replacements
-        occurences = [m.start() for m in re.finditer(p, current[0])]
-        #Loop through and add all posibilities to the set
-        for s in range(len(occurences)):
-            #Split and replace
-            start = current[0][:occurences[s]]
-            end = current[0][occurences[s]:]
-            for t in Replacements[p]:
-                result = start + end.replace(p, t, 1)
-                Results.insert((result, current[1] + 1))
-                if result == 'e':
-                    found = True
-                    #Print Result
-                    print(current[1] + 1)
-#print number of possible replacements
+print(totalelem - totalparen - 2*totalcomma - 1)
