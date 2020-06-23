@@ -1,1 +1,157 @@
 #!/usr/bin/python3
+
+import math
+
+file = open('input')
+inp = file.readlines()
+file.close()
+
+boss = {}
+player = {}
+gold = 0
+
+for p in inp:
+    p = p.split(': ')
+    boss[p[0]] = int(p[1].strip())
+    if p[0] == "Hit Points":
+        player[p[0]] = 100
+    else:
+        player[p[0]] = 0
+
+#Weapons:    Cost  Damage  Armor
+#Dagger        8     4       0
+#Shortsword   10     5       0
+#Warhammer    25     6       0
+#Longsword    40     7       0
+#Greataxe     74     8       0
+weapons = {'Dagger': [8,4,0], 'Shortsword': [10,5,0], 'Warhammer': [25,6,0], 'Longsword': [40,7,0], 'Greataxe': [74,8,0] }
+
+#Armor:      Cost  Damage  Armor
+#Leather      13     0       1
+#Chainmail    31     0       2
+#Splintmail   53     0       3
+#Bandedmail   75     0       4
+#Platemail   102     0       5
+armor = {'Leather':[13,0,1], 'Chainmail':[31,0,2], 'Splintmail':[53,0,3], 'Bandedmail':[75,0,4], 'Platemail':[102,0,5]}
+
+#Rings:      Cost  Damage  Armor
+#Damage +1    25     1       0
+#Damage +2    50     2       0
+#Damage +3   100     3       0
+#Defense +1   20     0       1
+#Defense +2   40     0       2
+#Defense +3   80     0       3
+rings = {'Damage1':[25,1,0],'Damage2':[50,2,0],'Damage3':[100,3,0],'Defense1':[20,0,1],'Defense2':[40,0,2],'Defense3':[80,0,3]}
+
+#if health / attack-defense >= other, Win
+def checkwin():
+    playerturns = math.ceil(boss['Hit Points']/(player['Damage'] - boss['Armor'] if player['Damage'] - boss['Armor'] > 0 else 1))
+    bossturns = math.ceil(player['Hit Points']/(boss['Damage'] - player['Armor'] if boss['Damage'] - player['Armor'] > 0 else 1))
+    return playerturns <= bossturns
+
+
+
+#1 Weapon, 0-1 Armor, 0-2 Rings
+bestcost = -1
+cost = 0
+#Check all weapons
+for p in weapons:
+    #Add weapon cost and damage
+    cost += weapons[p][0]
+    player['Damage'] += weapons[p][1]
+
+    #Check weapon alone
+    if checkwin():
+        if cost < bestcost or bestcost == -1:
+            bestcost = cost
+            print(f"{p} {cost}")
+
+    #Check armor
+    for s in armor:
+        #Add armor cost and defense
+        player['Armor'] += armor[s][2]
+        cost += armor[s][0]
+
+        #Check Weapon and armor
+        if checkwin():
+            if cost < bestcost or bestcost == -1:
+                bestcost = cost
+                print(f"{p} {s} {cost}")
+
+        #Check weapons, armor, and rings
+        for t in rings:
+            #Add ring stats and cost
+            cost += rings[t][0]
+            player['Damage'] += rings[t][1]
+            player['Armor'] += rings[t][2]
+
+            if checkwin():
+                if cost < bestcost or bestcost == -1:
+                    bestcost = cost
+                    print(f"{p} {s} {t} {cost}")
+            for f in rings:
+                #Ensure rings aren't the same
+                if f == t:
+                    continue
+                #Add second ring stats and cost
+                cost += rings[f][0]
+                player['Damage'] += rings[f][1]
+                player['Armor'] += rings[f][2]
+
+                if checkwin():
+                    if cost < bestcost or bestcost == -1:
+                        bestcost = cost
+                        print(f"{p} {s} {t} {f} {cost}")
+                #Take of second ring cost and stats
+                cost -= rings[f][0]
+                player['Damage'] -= rings[f][1]
+                player['Armor'] -= rings[f][2]
+
+            #Take off first ring and stats
+            cost -= rings[t][0]
+            player['Damage'] -= rings[t][1]
+            player['Armor'] -= rings[t][2]
+
+        #Remove armor stats and cost
+        cost -= armor[s][0]
+        player['Armor'] -= armor[s][2]
+
+    #Check rings (no armor)
+    for t in rings:
+        #Add ring stats and cost
+        cost += rings[t][0]
+        player['Damage'] += rings[t][1]
+        player['Armor'] += rings[t][2]
+
+        if checkwin():
+            if cost < bestcost or bestcost == -1:
+                bestcost = cost
+                print(f"{p} {t} {cost}")
+        for f in rings:
+            #Ensure rings aren't the same
+            if f == t:
+                continue
+            #Add second ring stats and cost
+            cost += rings[f][0]
+            player['Damage'] += rings[f][1]
+            player['Armor'] += rings[f][2]
+
+            if checkwin():
+                if cost < bestcost or bestcost == -1:
+                    bestcost = cost
+                    print(f"{p} {t} {f} {cost}")
+            #Remove second ring stats and cost
+            cost -= rings[f][0]
+            player['Damage'] -= rings[f][1]
+            player['Armor'] -= rings[f][2]
+
+        #Remove ring stats and cost
+        cost -= rings[t][0]
+        player['Damage'] -= rings[t][1]
+        player['Armor'] -= rings[t][2]
+
+    #Remove weapon stats and cost
+    cost -= weapons[p][0]
+    player['Damage'] -= weapons[p][1]
+
+print(bestcost)
