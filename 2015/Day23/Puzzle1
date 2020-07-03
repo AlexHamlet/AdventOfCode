@@ -2,42 +2,51 @@
 
 import math
 
+#Read in file
 file = open('input')
 inp = file.readlines()
 file.close()
 
+#Init registers and pointer
 reg = {'a':0, 'b':0}
 pointer = 0;
 
+#Run instructions until pointer falls out
 while 0 <= pointer < len(inp):
     print(f"pointer: {pointer}, a:{reg['a']}")
     line = inp[pointer].strip().split(' ')
+    #Half register
     if(line[0] == 'hlf'):
         reg[line[1]] = math.floor(reg[line[1]]/2)
         pointer += 1
         continue
+    #Triple Register
     if line[0] == 'tpl':
         reg[line[1]] = int(reg[line[1]]*3)
         pointer += 1
         continue
+    #Increment Register
     if line[0] == 'inc':
         reg[line[1]] += 1
         pointer += 1
         continue
+    #Jump
     if line[0] == 'jmp':
         pointer += int(line[1])
         continue
+    #Jump if even
     if line[0] == 'jie':
         if reg[line[1][:1]] % 2 == 0:
             pointer += int(line[2])
         else:
             pointer += 1
         continue
+    #Jump if one
     if line[0] == 'jio':
         if reg[line[1][:1]] == 1:
             pointer += int(line[2])
         else:
             pointer += 1
         continue
-
+#Print Register Values
 print(reg)
