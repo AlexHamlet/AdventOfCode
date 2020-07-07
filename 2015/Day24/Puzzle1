@@ -1,1 +1,34 @@
 #!/usr/bin/python3
+
+import itertools
+
+#Read file
+file = open('input')
+inp = file.readlines()
+file.close()
+
+#Convert to numbers
+inp = list(map(int, inp))
+tot = sum(inp)
+total = tot/3
+
+#entanglement flag
+ent = False
+entlist = []
+#find smallest number of packages
+for p in range(len(inp)):
+    for s in itertools.combinations(inp, p):
+        if(sum(s) == total):
+            entlist.append(s)
+            ent = True
+    if(ent):
+        break
+#find smallest entanglement
+min = -1
+for p in entlist:
+    check = 1
+    for s in p:
+        check *= s
+    if min == -1 or check < min:
+        min = check
+print(min)
