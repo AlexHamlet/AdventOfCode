@@ -1,1 +1,22 @@
 #!/usr/bin/python3
+
+import math
+
+#Input
+row = 2978
+col = 3083
+
+#Calculate Position
+pos = 0
+for p in range(1, col + row - 1):
+    pos += p
+pos += col
+
+#Calculate Value
+val = 20151125
+multval = 252533
+roundval = 33554393
+for p in range(pos - 1):
+    val *= multval
+    val %= roundval
+print(val)
