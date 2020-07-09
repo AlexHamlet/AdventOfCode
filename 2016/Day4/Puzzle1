@@ -1,0 +1,6 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = file.read()
+file.close()
+

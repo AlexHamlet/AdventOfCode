@@ -12,7 +12,7 @@ fixedTotal = 0
 #iterate over input
 for line in input:
     #banish newline charaters
-    line = line.strip()
+    line = line.strip()#.replace(r"\x0c", "").replace(r"\x09", "")
     #count chars raw and evaluated
     total += len(line)
     fixedTotal += len(eval(line))
@@ -27,3 +27,9 @@ print(total - fixedTotal)
 #same answer given it is fed a newline at the end
 #I must move on, I've made no progress for about a week.
 print(sum(len(s[:-1]) - len(eval(s)) for s in open('input')))
+
+#I stole more code in an attempt to figure out what went wrong
+#Regardless of how many solutions I come across, my answer always matches
+#I've given up hope on this Day
+with open('input') as f:
+    print(sum(len(_) - 1 - len(eval(_)) for _ in f))

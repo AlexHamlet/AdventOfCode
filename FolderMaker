@@ -17,7 +17,10 @@ for p in range(1, 26):
         #Creates Puzzle files and adds a shebang
         file = open(sys.argv[1]+"Day"+str(p)+"/Puzzle"+str(s), 'w+')
         os.chmod(sys.argv[1]+"Day"+str(p)+"/Puzzle"+str(s), 0o777)
-        file.write("#!/usr/bin/python3")
+        file.write("#!/usr/bin/python3\n\n")
+        file.write("file = open('input')\n")
+        file.write("inp = file.read()\n")
+        file.write("file.close()\n\n")
         file.close()
     #Creates input file
     file = open(sys.argv[1]+"Day"+str(p)+"/input", 'w+')
