@@ -4,3 +4,35 @@ file = open('input')
 inp = file.read()
 file.close()
 
+#format input
+inp = inp.split(", ")
+
+#init variables
+x = 0
+y = 0
+dir = 0
+
+for p in inp:
+    #Rotate Right
+    if(p[0] == 'R'):
+        dir += 1
+        dir %= 4
+    #Rotate Left
+    else:
+        dir -= 1
+        dir %= 4
+    #Go up
+    if dir == 0:
+        y += int(p[1:])
+    #Go right
+    if dir == 1:
+        x += int(p[1:])
+    #Go down
+    if dir == 2:
+         y -= int(p[1:])
+     #Go left
+    if dir == 3:
+        x -= int(p[1:])
+
+#Print disance
+print(abs(x) + abs(y))

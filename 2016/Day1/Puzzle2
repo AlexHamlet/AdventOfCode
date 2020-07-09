@@ -4,3 +4,82 @@ file = open('input')
 inp = file.read()
 file.close()
 
+#format input
+inp = inp.split(", ")
+
+#init variables
+x = 0
+y = 0
+dir = 0
+
+prevx = 0
+prevy = 0
+places = []
+done = False
+result = (0,0)
+
+for p in inp:
+    #Rotate right
+    if(p[0] == 'R'):
+        dir += 1
+        dir %= 4
+    else:
+    #Rotate left
+        dir -= 1
+        dir %= 4
+    #Go up
+    if dir == 0:
+        y += int(p[1:])
+    #Go right
+    if dir == 1:
+        x += int(p[1:])
+    #Go down
+    if dir == 2:
+         y -= int(p[1:])
+     #Go left
+    if dir == 3:
+        x -= int(p[1:])
+
+    #Forward (loops forward to go right)
+    for s in range(prevx + 1, x + 1):
+    #Same Place check
+        if (s,y) in places:
+            done = True
+            result = (s,y)
+            break
+        places.append((s,y))
+    #Loops forward to go up
+    for s in range(prevy + 1, y + 1):
+    #Same Place check
+        if (x,s) in places:
+            done = True
+            result = (x,s)
+            break
+        places.append((x,s))
+
+    #Backwards (loops Backwards to go left)
+    for s in range(prevx - 1, x - 1, -1):
+    #Same Place check
+        if (s,y) in places:
+            done = True
+            result = (s,y)
+            break
+        places.append((s,y))
+    #Loops Backwards to go down
+    for s in range(prevy - 1, y - 1, -1):
+    #Same Place check
+        if (x,s) in places:
+            done = True
+            result = (x,s)
+            break
+        places.append((x,s))
+
+    #Reset position
+    prevy = y
+    prevx = x
+    #Same Place check
+    if done:
+        break
+
+#print distance
+print(abs(result[0]) + abs(result[1]))
