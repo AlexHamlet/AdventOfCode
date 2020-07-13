@@ -1,6 +1,27 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Correct Triangles
+count = 0
+line = 0
+tri = [[],[],[]]
+
+for p in inp:
+    #Read numbers and put them into lists
+    p = list(map(int, p.strip().split()))
+    for s in range(len(p)):
+        tri[s].append(p[s])
+    #When we have enough numbers check for triangles
+    if len(tri[0]) == 3:
+        for s in tri:
+            s.sort()
+            if s[0] + s[1] > s[2]:
+                count += 1
+        #Reset lists
+        tri = [[],[],[]]
+
+#Print number of correct triangles
+print(count)
