@@ -1,6 +1,30 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Start at 5
+x = 1
+y = 1
+
+#Check each line
+for p in inp:
+    #Follow each letter
+    for s in p:
+        #Check up
+        if s == 'U' and y > 0:
+            y -= 1
+        #Check right
+        if s == 'R' and x < 2:
+            x += 1
+        #Check down
+        if s == 'D' and y < 2:
+            y += 1
+        #Check left
+        if s == 'L' and x > 0:
+            x -= 1
+    #Print key
+    print((y*3 + x + 1), end='')
+#Clean output
+print()

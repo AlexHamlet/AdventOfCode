@@ -1,6 +1,33 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Start at 5
+x = 0
+y = 2
+
+#Map keypad
+keypad = [['','',1,'',''], ['',2,3,4,''], [5,6,7,8,9], ['','A','B','C',''], ['','','D','','']]
+
+#Check each line
+for p in inp:
+    #Check each letter
+    for s in p:
+        #Check up
+        if s == 'U' and y > 0 and not keypad[y-1][x] == '':
+            y -= 1
+        #Check right
+        if s == 'R' and x < 4 and not keypad[y][x+1] == '':
+            x += 1
+        #Check down
+        if s == 'D' and y < 4 and not keypad[y+1][x] == '':
+            y += 1
+        #Check left
+        if s == 'L' and x > 0 and not keypad[y][x-1] == '':
+            x -= 1
+    #print key
+    print(keypad[y][x], end='')
+#Clean output
+print()
