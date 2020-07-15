@@ -1,6 +1,43 @@
 #!/usr/bin/python3
 
+import re
+
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Store letters and occurences in a set
+letters = set()
+rooms = 0
+
+#Iterate through each room
+for p in inp:
+    p = p.strip().split('[')
+    #Grab checksum
+    csum = p[1][:-1]
+    #Grab key
+    key = p[0]
+    #Grab value
+    val = int(p[0].split("-")[-1])
+    #Build checksum
+    for s in key:
+        #Skip numbers and dashes
+        if re.match(re.compile('[0-9]'), s) or s == '-':
+            continue
+        count = len(re.findall(re.compile(f'{s}'), str(p)))
+        #Invert numbers to make sorting easier later
+        letters.add((100-count, s))
+
+    #Sort letters and occurences
+    check = sorted(letters)
+    #Check against checksum
+    flag = True
+    for p in range(5):
+        if not check[p][1] == csum[p]:
+            flag = False
+    if flag:
+        rooms += val
+    #Reset letters
+    letters = set()
+#Print final value
+print(rooms)

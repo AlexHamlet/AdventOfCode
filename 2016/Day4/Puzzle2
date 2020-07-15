@@ -1,6 +1,34 @@
 #!/usr/bin/python3
 
+import re
+offset = 97
+
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
+
+for p in inp:
+    p = p.strip().split('[')
+    #Grab SectorID
+    val = int(p[0].split("-")[-1])
+
+    #Shift cipher with SectorID
+    shifter = []
+    for s in p[0]:
+        #Replace dashes with spaces
+        if s == "-":
+            shifter.append(" ")
+        #Ignore numbers
+        elif re.match(re.compile('[0-9]'), s):
+            continue
+        #Shift letters
+        else:
+            shifter.append(chr((ord(s) - offset + (val%26))%26 + offset))
+    #Build phrase
+    phrase = ''
+    for s in shifter:
+        phrase += s
+    #Check phrase against north
+    if re.match(re.compile('north'), phrase):
+        print(f"{phrase}: {val}")
 
