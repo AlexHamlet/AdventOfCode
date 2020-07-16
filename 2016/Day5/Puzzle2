@@ -1,6 +1,26 @@
 #!/usr/bin/python3
 
+import hashlib
+
 file = open('input')
 inp = file.read()
 file.close()
 
+#Try every number from zero
+num = 0
+#Init password list
+password = [-1,-1,-1,-1,-1,-1,-1,-1]
+while -1 in password:
+    attempt = inp + str(num)
+    hash = hashlib.md5(attempt.encode())
+    #Check for leading 0's
+    if(hash.hexdigest().startswith("00000")):
+        #Store number in passord list at the correct position
+        if hash.hexdigest()[5] in ('0','1','2','3','4','5','6','7') and password[int(hash.hexdigest()[5])] == -1:
+            password[int(hash.hexdigest()[5])] = hash.hexdigest()[6]
+    num += 1
+
+#Print password neatly
+for p in password:
+    print(p, end='')
+print()
