@@ -1,6 +1,27 @@
 #!/usr/bin/python3
 
+import operator
+
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Init dictionaries to count each letter
+message = [{} for p in inp[0].strip()]
+
+#Iterate over all transmissions
+for p in inp:
+    p = p.strip()
+    #Iterate over each letter
+    for s in range(len(p)):
+        #Increment by one (avoids NoneType error)
+        try:
+            message[s][p[s]] = message[s].get(p[s]) + 1
+        except Exception as e:
+            message[s][p[s]] =  1
+#Revine message
+retval = ''
+for p in message:
+    #Get key with highest value
+    retval += max(p.items(), key=operator.itemgetter(1))[0]
+print(retval)
