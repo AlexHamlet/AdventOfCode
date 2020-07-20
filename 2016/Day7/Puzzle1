@@ -1,6 +1,42 @@
 #!/usr/bin/python3
 
+import re
+
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Test
+#inp = ['abcd[bddb]xyyx', 'abba[mnop]qrst', 'aaaa[qwer]tyui', 'ioxxoj[asdfgh]zxcvbn']
+
+#Regex for abba
+rule = re.compile(r"(.)(.)\2\1")
+#Count of lines passing rule
+support = 0
+
+#for every line
+for p in inp:
+    #split on [
+    p = p.strip().split('[')
+    #rid p of text between []
+    badflag = False
+    for s in range(len(p)):
+        if ']' in p[s]:
+            #Search between [] for the rule
+            if re.search(rule, p[s].split(']')[0]):
+                badflag = True
+            p[s] = p[s].split(']')[1]
+    if badflag:
+        continue
+    #Check for match
+    for s in p:
+        if re.search(rule, s):
+            quadflag = False
+            #Ensure no quadruples pass
+            for t in re.findall(rule,s):
+                if not t[0] == t[1]:
+                    quadflag = True
+            if quadflag:
+                support += 1
+                break
+print(support)
