@@ -22,7 +22,7 @@ for p in inp:
     badflag = False
     for s in range(len(p)):
         if ']' in p[s]:
-            #Search between [] for the rule
+            #Search between [] for the rule7
             if re.search(rule, p[s].split(']')[0]):
                 badflag = True
             p[s] = p[s].split(']')[1]
