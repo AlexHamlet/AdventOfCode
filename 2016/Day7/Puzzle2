@@ -18,7 +18,6 @@ for p in inp:
         dup = re.findall(rule, p)[0]
         #Weed out duplicates
         if not (dup[4] == dup[5] and dup[16] == dup[17]):
-            print(dup)
             support += 1
 #Print result
 print(support)

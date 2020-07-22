@@ -1,6 +1,48 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.readlines()
 file.close()
 
+#Init display
+display = [[0 for p in range(50)]for s in range(6)]
+
+#Loop through input
+for p in inp:
+    p = p.strip().split()
+    #Draw rect
+    if p[0] == 'rect':
+        for s in range(int(p[1].split('x')[0])):
+            for t in range(int(p[1].split('x')[1])):
+                display[t][s] = 1
+    else:
+        #Rotate row
+        if p[1] == 'row':
+            #Get row to rotate
+            row = int(p[2].split('=')[1])
+            #Hold initial values
+            hold = []
+            for s in display[row]:
+                hold.append(s)
+            #Rotate values
+            for s in range(50):
+                display[row][(s+int(p[4]))%50] = hold[s]
+
+        #Rotate col
+        else:
+            #Get col to rotate
+            col = int(p[2].split('=')[1])
+            #Hold old values
+            hold = []
+            for s in display:
+                hold.append(s[col])
+            #Rotate values
+            for s in range(len(display)):
+                display[(s+int(p[4]))%6][col] = hold[s]
+#Count pixels
+count = 0
+for p in display:
+    for s in p:
+        if s:
+            count += 1
+print(count)
