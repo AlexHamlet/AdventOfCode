@@ -4,3 +4,52 @@ file = open('input')
 inp = file.read()
 file.close()
 
+#Test string
+#inp = "A(2x2)BCD(2x2)EFG"
+
+#Init variables
+p = -1
+#Number of chars to repeat
+num = ""
+#Number of times to repeat
+repeat = ""
+#Final string
+output = ""
+
+#Used to decide when to change state
+numflag = False
+repeatflag = False
+
+#Iterate over string
+while p < len(inp.strip()) - 1:
+    p += 1
+    #Start read
+    if inp[p] == '(':
+        numflag = True
+        continue
+    #End read
+    if inp[p] == ')':
+        repeatflag = False
+        output += inp[p+1:p+int(num)+1] * int(repeat)
+        #Jump forward and reset values
+        p += int(num)
+        num = ""
+        repeat = ""
+        continue
+    #Change state
+    if inp[p] == 'x' and numflag:
+        numflag = False
+        repeatflag = True
+        continue
+    #Read num value
+    if numflag:
+        num += inp[p]
+        continue
+    #Read repeat value
+    if repeatflag:
+        repeat += inp[p]
+        continue
+    #append output
+    output += inp[p]
+
+print(len(output))
