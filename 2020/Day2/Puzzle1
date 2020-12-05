@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+import re
+
+file = open('input')
+inp = file.read().split("\n")
+file.close()
+
+count = 0
+for p in inp:
+    #Parse string
+    parts = p.split(" ")
+    min = int(parts[0].split("-")[0])
+    max = int(parts[0].split("-")[1])
+    letter = parts[1][0]
+    #count required letter
+    found = len(re.findall(letter, parts[2]))
+    #Check and increment
+    if(found >= min and found <= max):
+        count += 1
+print(count)

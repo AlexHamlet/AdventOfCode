@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = file.read()
+file.close()
+
+solved = False
+nums = list(map(int, inp.split("\n")))
+for p in range(0, len(nums)):
+    for s in range(p, len(nums)):
+        for t in range(s, len(nums)):
+            if(nums[p]+nums[s]+nums[t] == 2020):
+                print(nums[p]*nums[s]*nums[t])
+                solved = True
+            if(solved):
+                break
+        if(solved):
+            break
+    if(solved):
+        break
+
+

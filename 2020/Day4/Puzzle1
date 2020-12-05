@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = file.read().split("\n\n")
+file.close()
+
+count = 0
+for p in inp:
+    

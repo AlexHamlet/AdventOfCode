@@ -5,7 +5,7 @@ inp = file.read()
 file.close()
 
 #Test string
-#inp = "A(2x2)BCD(2x2)EFG"
+inp = "A(2x2)BCD(2x2)EFG"
 
 #Init variables
 p = -1

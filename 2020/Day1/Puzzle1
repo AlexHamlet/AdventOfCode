@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = file.read()
+file.close()
+
+req = []
+for x in inp.split("\n"):
+    x1 = int(x)
+    if(x1 in req):
+        print(x1)
+        print(2020-x1)
+        print(x1 * (2020-x1))
+        break;
+    req.append(2020-x1)

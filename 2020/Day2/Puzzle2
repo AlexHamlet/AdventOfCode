@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = file.read().split("\n")
+file.close()
+
+count = 0
+for p in inp:
+    #Parse string
+    parts = p.split(" ")
+    min = int(parts[0].split("-")[0])
+    max = int(parts[0].split("-")[1])
+    letter = parts[1][0]
+    #Check and increment
+    if((parts[2][min-1] == letter) != (parts[2][max-1] == letter)):
+        count += 1
+print(count)
