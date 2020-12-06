@@ -1,6 +1,21 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n\n")
 file.close()
 
+count = 0
+#For each group
+for p in inp:
+    dict = {}
+    np = p.split("\n")
+    #for each person
+    for s in np:
+        #for each letter
+        for t in s:
+            dict[t] = dict.get(t, 0) + 1
+    #Check all entries for all people
+    for s in dict.keys():
+        if(dict[s] == len(np)):
+            count += 1
+print(count)

@@ -1,6 +1,20 @@
 #!/usr/bin/python3
 
+import re
+
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n\n")
 file.close()
 
+count = 0
+#for each group
+for p in inp:
+    dict = {}
+    #Get unique letters
+    np = p.strip().replace("\n", "")
+    for s in np:
+        dict[s] = 0
+    #Inc count for every unique
+    count += len(dict)
+
+print(count)
