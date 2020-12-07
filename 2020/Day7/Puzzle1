@@ -1,6 +1,31 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+#hold bags and thier containing bags
+bagdict = {}
+
+#Build bagdict
+for p in inp:
+    if "no other bags" in p:
+        continue
+    p = p.split(" ")
+    print(p)
+    for s in range(5, len(p)-1, 4):
+        hold = bagdict.get(p[s]+p[s+1], list())
+        hold.append(p[0]+p[1])
+        bagdict[p[s]+p[s+1]] = hold
+
+#Search dictionary for children (that hold shinygold)
+baglist = ["shinygold"]
+unique = {}
+while baglist:
+    bag = baglist.pop()
+    unique[bag] = 0
+    for p in bagdict.get(bag, list()):
+        baglist.append(p)
+
+#print solution Subtract gold bag
+print(len(unique.keys()) - 1)

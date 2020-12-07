@@ -1,6 +1,34 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+#Holds bags and thier contents
+bagdict = {}
+
+#Build bagdict
+for p in inp:
+    if "no other bags" in p:
+        p = p.split(" ")
+        bagdict[p[0]+p[1]] = list()
+        continue
+    p = p.split(" ")
+    for s in range(5, len(p)-1, 4):
+        hold = bagdict.get(p[0]+p[1], list())
+        hold.append((p[s]+p[s+1], p[s-1]))
+        bagdict[p[0]+p[1]] = hold
+
+#Loop through and add all children
+baglist = ["shinygold"]
+count = 0
+while baglist:
+    print(len(baglist))
+    print(baglist)
+    bag = baglist.pop()
+    count += 1
+    for p in bagdict.get(bag, list()):
+        for s in range(int(p[1])):
+            baglist.append(p[0])
+#Print solution subtract gold bag
+print(count - 1)
