@@ -4,6 +4,19 @@ file = open('input')
 inp = file.read().split("\n\n")
 file.close()
 
+#cid (Country ID) optional don't care
+
+fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
+
 count = 0
 for p in inp:
-    
+    #validcount
+    vcount = 0
+    #check for fields
+    for s in fields:
+        if s in p:
+            vcount += 1
+    #ensure all fields exist
+    if vcount == len(fields):
+        count += 1
+print(count)

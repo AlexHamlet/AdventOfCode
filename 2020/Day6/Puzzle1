@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import re
-
 file = open('input')
 inp = file.read().split("\n\n")
 file.close()
