@@ -1,6 +1,31 @@
 #!/usr/bin/python3
 
+import math
+
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+#Store max id
+max = 0
+
+#for each pass
+for p in inp:
+    rmin = 0
+    rmax = 127
+    cmin = 0
+    cmax = 7
+    #Solve pass
+    for s in p:
+        if s == "F":
+            rmax = math.floor((rmin + rmax) / 2)
+        if s == "B":
+            rmin = math.ceil((rmin + rmax) / 2)
+        if s == "L":
+            cmax = math.floor((cmin + cmax) / 2)
+        if s == "R":
+            cmin = math.ceil((cmin + cmax) / 2)
+    #Check max
+    if(rmin * 8 + cmin > max):
+        max = rmin * 8 + cmin
+print(max)
