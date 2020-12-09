@@ -1,6 +1,33 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+#Init variables
+preamble = 25
+nums = []
+badflag = False
+
+#For each number
+for p in inp:
+    p = int(p)
+    if(len(nums) < preamble):
+        nums.append(p)
+        continue
+    badflag = True
+    #Check sums
+    for s in range(len(nums)):
+        for t in range(s, len(nums)):
+            if(nums[s] + nums[t] == p):
+                badflag = False
+                break
+        if(not badflag):
+            break
+    #List maintenance (stays at preamble length)
+    nums.append(p)
+    if(len(nums) > preamble):
+        nums.pop(0)
+    if(badflag):
+        print(p)
+        break

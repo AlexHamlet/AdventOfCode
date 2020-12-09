@@ -1,6 +1,54 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+#Init variables
+preamble = 25
+nums = []
+badflag = False
+badnum = 0
+
+#for each number
+for p in inp:
+    p = int(p)
+    #Init preamble
+    if(len(nums) < preamble):
+        nums.append(p)
+        continue
+    badflag = True
+    #Check sums
+    for s in range(len(nums)):
+        for t in range(s, len(nums)):
+            if(nums[s] + nums[t] == p):
+                badflag = False
+                break
+        if(not badflag):
+            break
+    #Maintain List
+    nums.append(p)
+    if(len(nums) > preamble):
+        nums.pop(0)
+    if(badflag):
+        print(p)
+        badnum = p
+        break
+
+#Find contiguous nums
+nums.clear()
+for p in inp:
+    p = int(p)
+    #Shrink list to decrease sum
+    while(sum(nums) > badnum):
+        if(len(nums) > 0):
+            nums.pop(0)
+    #Inc list to increase sum
+    if(sum(nums) < badnum):
+        nums.append(p)
+    #Check for solution
+    if(sum(nums) == badnum):
+        break
+#Sort and print data
+nums.sort()
+print(nums[0] + nums[len(nums) - 1])
