@@ -1,6 +1,44 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+acc = 0
+point = 0
+lines = [False for x in range(len(inp))]
+changeline = -1
+changeflag = False
+changed = []
+
+while(True):
+    if(point == len(lines)):
+        break
+    print(changed)
+    if(lines[point]):
+        acc = 0
+        point = 0
+        lines = [False for x in range(len(inp))]
+        changeflag = False
+    lines[point] = True
+    p = inp[point].split(" ")
+    if(p[0] == "acc"):
+        acc += int(p[1])
+    if(p[0] == "jmp"):
+        if(not changeflag and not point in changed):
+            changeflag = True
+            changeline = point
+            changed.append(point)
+            point += 1
+            continue
+        point += int(p[1])
+        continue
+    if(p[0] == "nop"):
+        if(not changeflag and not point in changed):
+            changeflag = True
+            changeline = point
+            changed.append(point)
+            point += int(p[1])
+            continue
+    point += 1
+print(acc)

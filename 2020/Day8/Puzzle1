@@ -1,6 +1,24 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+acc = 0
+point = 0
+lines = [False for x in range(len(inp))]
+
+while(True):
+    if(lines[point]):
+        print(acc)
+        break
+    lines[point] = True
+    p = inp[point].split(" ")
+    if(p[0] == "acc"):
+        acc += int(p[1])
+    if(p[0] == "jmp"):
+        point += int(p[1])
+        continue
+    if(p[0] == "nop"):
+        pass
+    point += 1
