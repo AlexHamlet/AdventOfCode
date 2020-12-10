@@ -1,6 +1,19 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+adapt = []
+jolts = [0,0,0]
+
+for p in inp:
+    adapt.append(int(p))
+adapt.sort()
+
+prev = 0
+for p in adapt:
+    jolts[p-prev-1] += 1
+    prev = p
+
+print(jolts[0] * (jolts[2]+1))

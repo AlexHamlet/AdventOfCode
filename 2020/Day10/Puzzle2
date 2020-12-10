@@ -1,6 +1,42 @@
 #!/usr/bin/python3
 
+import math
+
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+adapt = []
+total = 1
+
+for p in inp:
+    adapt.append(int(p))
+adapt.sort()
+
+prev = 0
+count = 0
+hold = 0
+for p in adapt:
+    if(p-prev == 1):
+        count +=1
+    if(p-prev == 3):
+        for s in range(0, count):
+            hold += math.factorial(count-1)/(math.factorial(s)*math.factorial(count - 1 - s))
+        if(count-1 > 2):
+            hold -= 1
+        if(hold > 0):
+            total *= hold
+        count = 0
+        hold = 0
+    prev = p
+
+for s in range(0, count):
+    hold += math.factorial(count - 1) / (math.factorial(s) * math.factorial(count - 1 - s))
+hold -= 1
+if (count-1 > 2):
+    hold - 1
+if (hold > 0):
+    total *= hold
+
+print(adapt)
+print(total)
