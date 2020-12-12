@@ -1,6 +1,89 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+for p in range(len(inp)):
+    inp[p] = list(inp[p])
+
+temp = []
+rounds = 0
+
+while not temp == inp:
+    temp = []
+    for i in range(len(inp)):
+        tlist = []
+        for j in range(len(inp[i])):
+            tlist.append(inp[i][j])
+        temp.append(tlist)
+    for p in range(len(inp)):
+        for s in range(len(inp[p])):
+            if(temp[p][s] == "."):
+                continue
+            count = 0
+            #up
+            pos = [s,p-1]
+            while pos[1] > -1 and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[1] -= 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #ur
+            pos = [s+1,p-1]
+            while pos[1] > -1 and pos[0] < len(inp[0]) and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] += 1
+                pos[1] -= 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #right
+            pos = [s+1,p]
+            while pos[0] < len(inp[0]) and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] += 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #dr
+            pos = [s+1,p+1]
+            while pos[1] < len(inp) and pos[0] < len(inp[0]) and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] += 1
+                pos[1] += 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #down
+            pos = [s,p+1]
+            while pos[1] < len(inp) and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[1] += 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #dl
+            pos = [s-1,p+1]
+            while pos[1] < len(inp) and pos[0] > -1 and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] -= 1
+                pos[1] += 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #left
+            pos = [s-1,p]
+            while pos[0] > -1 and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] -= 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            #ul
+            pos = [s-1,p-1]
+            while pos[1] > -1 and pos[0] > -1 and temp[pos[1]][pos[0]] not in ("#", "L"):
+                pos[0] -= 1
+                pos[1] -= 1
+            if pos[0] < len(inp[0]) and pos[0] > -1 and pos[1] < len(inp) and pos[1] > -1 and temp[pos[1]][pos[0]] == "#":
+                count += 1
+            if(temp[p][s] == "L" and count == 0):
+                inp[p][s] = "#"
+            elif(count > 4):
+                inp[p][s] = "L"
+    rounds += 1
+    
+
+ocpd = 0
+for p in inp:
+    for s in p:
+        if(s == "#"):
+            ocpd += 1
+print(ocpd)

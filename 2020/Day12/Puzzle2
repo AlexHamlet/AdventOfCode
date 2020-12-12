@@ -1,6 +1,34 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+hold = [0,0]
+way = [10,1]
+pos = [0,0]
+
+for p in inp:
+    if(p[0] == "N"):
+        way[1] += int(p[1:])
+        pass
+    if(p[0] == "E"):
+        way[0] += int(p[1:])
+        pass
+    if(p[0] == "S"):
+        way[1] -= int(p[1:])
+        pass
+    if(p[0] == "W"):
+        way[0] -= int(p[1:])
+        pass
+    if(p[0] == "F"):
+        pos[0] += way[0] * int(p[1:])
+        pos[1] += way[1] * int(p[1:])
+    if(p[0] == "L"):
+        for s in range(int(p[1:])//90):
+            way = [-way[1], way[0]]
+    if(p[0] == "R"):
+        for s in range(int(p[1:])//90):
+            way = [way[1], -way[0]]
+
+print(abs(pos[0])+abs(pos[1]))

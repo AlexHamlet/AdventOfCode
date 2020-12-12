@@ -1,6 +1,43 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n")
 file.close()
 
+for p in range(len(inp)):
+    inp[p] = list(inp[p])
+
+temp = []
+rounds = 0
+
+while not temp == inp:
+    temp = []
+    for i in range(len(inp)):
+        tlist = []
+        for j in range(len(inp[i])):
+            tlist.append(inp[i][j])
+        temp.append(tlist)
+    for p in range(len(inp)):
+        for s in range(len(inp[p])):
+            if(temp[p][s] == "."):
+                continue
+            count = 0
+            for t in range(-1,2):
+                for f in range(-1,2):
+                    if(p+t > -1 and p+t < len(inp) and f+s > -1 and f+s < len(inp[p])):
+                        if(t == 0 and f == 0):
+                            continue
+                        if temp[p+t][s+f] == "#":
+                            count += 1
+            if(temp[p][s] == "L" and count == 0):
+                inp[p][s] = "#"
+            elif(count > 3):
+                inp[p][s] = "L"
+    rounds += 1
+
+ocpd = 0
+for p in inp:
+    for s in p:
+        if(s == "#"):
+            ocpd += 1
+print(ocpd)
