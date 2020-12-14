@@ -1,6 +1,47 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split('\n')
 file.close()
 
+mask = 0
+smask = ""
+val = {}
+
+for p in inp:
+    memstemp = []
+    mems = []
+    memval = ""
+    p = p.split(" = ")
+    #determine mask/assignment
+    if not "[" in p[0]:
+        smask = p[1]
+        continue
+    p[0] = f"{bin(int(p[0][4:-1]))}"[2:].zfill(36)
+    #Build mask
+    for s in range(len(smask)):
+        if(smask[s] == "X"):
+            memval += "X"
+        elif(smask[s] == "1" or p[0][s] == "1"):
+            memval += "1"
+        else:
+            memval += "0"
+    #Generate addresses
+    memstemp.append(memval)
+    while len(memstemp):
+        temp = memstemp.pop()
+        if("X" in temp):
+            memstemp.append(temp.replace("X", "1", 1))
+            memstemp.append(temp.replace("X", "0", 1))
+        else:
+            mems.append(int(temp,2))
+
+    #Set values
+    for s in mems:
+        val[s] = int(p[1])
+
+#Add sums
+sum = 0
+for p in val.keys():
+    sum += val[p]
+print(sum)

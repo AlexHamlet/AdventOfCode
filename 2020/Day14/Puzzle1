@@ -1,6 +1,42 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split('\n')
 file.close()
 
+mask = 0
+smask = ""
+val = {}
+
+for p in inp:
+    maskval = ""
+    p = p.split(" = ")
+    #Determine mask or assignment
+    if not "[" in p[0]:
+        smask = p[1]
+        p[1] = p[1].replace("X", "0")
+        mask = int(p[1],2)
+        continue
+    else:
+        temp = int(p[1])|mask
+        val[p[0][4:-1]] = 0
+    #Build value
+    for s in range(len(smask)-1, -1, -1):
+        if smask[s] == "X":
+            try:
+                maskval = str(bin(int(p[1])))[-1:1:-1][len(smask)-1-s]+maskval
+            except:
+                maskval = "0" + maskval
+                pass
+        if smask[s] == "1":
+            maskval = "1"+maskval
+        if smask[s] == "0":
+            maskval = "0"+maskval
+    #Set value
+    val[p[0][4:-1]] = int(maskval,2)
+
+#Get sum
+sum = 0
+for p in val.keys():
+    sum += val[p]
+print(sum)
