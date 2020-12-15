@@ -1,6 +1,41 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split(",")
 file.close()
 
+last = {}
+written = ""
+
+#Init last for input
+for p in range(len(inp)):
+    last[inp[p]] = [p]
+    written = inp[p]
+
+#loop to 30,000,000, skip input
+for p in range(6,30000000):
+    #Get previous
+    prev = written
+    #If previous in keys
+    if(prev in last.keys()):
+        #If one instance, "write" "0"
+        if(len(last[prev]) == 1):
+            #handle 0,1,2 previous zeros
+            if(len(last.get("0", "")) == 0):
+                last["0"] = [str(p)]
+                written = "0"
+            else:
+                last["0"] = (last["0"][-1],str(p))
+                written = "0"
+        #handle difference
+        else:
+            written = str(int(last[prev][1]) - int(last[prev][0]))
+            #handle 0,1,2 written values in dict
+            if(len(last.get(written,"")) == 0):
+                last[written] = [str(p)]
+            else:
+                last[written] = (last[written][-1], str(p))
+    #If previous not in keys, add it
+    else:
+        last[prev] = [str(p)]
+print(written)

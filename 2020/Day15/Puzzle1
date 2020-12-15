@@ -1,6 +1,22 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split(",")
 file.close()
 
+#Loop through to 2020, skip inp
+for p in range(2020 - 6):
+    #get previous
+    prev = inp[-1]
+    #if exists
+    if(prev in inp):
+        #If only one instance of prev
+        if(inp.count(prev) == 1):
+            inp.append("0")
+        else:
+        #If more instances, find difference
+            for s in range(len(inp)-2, -1, -1):
+                if(inp[s] == prev):
+                    inp.append(str(len(inp)-1-s))
+                    break
+print(inp[-1])
