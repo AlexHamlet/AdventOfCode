@@ -1,6 +1,65 @@
 #!/usr/bin/python3
 
+from collections import defaultdict
+
 file = open('input')
-inp = file.read()
+inp = file.read().split('\n')
 file.close()
 
+#Collect Active positions
+active = set()
+for p in range(len(inp)):
+	for s in range(len(inp[p])):
+		if inp[p][s] == "#":
+			active.add((p, s, ))
+
+def p1(arg):
+    #Get cube wrap
+	neighoffset = set(
+		(x, y, z, )
+		for x in (-1, 0, 1, )
+		for y in (-1, 0, 1, )
+		for z in (-1, 0, 1, )
+	)
+    #Remove inner cube
+	neighoffset.remove((0, 0, 0, ))
+
+    #Run rules
+	def tick(active_cubes):
+        #init neighbors
+		neighbors = defaultdict(int)
+        #for active position
+		for active_cube in active_cubes:
+            #for neighbors
+			for neigh in neighoffset:
+                #Get actual neighbor position
+				neighbor = (
+					active_cube[0]+neigh[0],
+					active_cube[1]+neigh[1],
+					active_cube[2]+neigh[2],
+				)
+                #Add position and count to dict
+				neighbors[neighbor] += 1
+
+        #for each neighbor, given their count
+		for cube, active_neighbors_count in neighbors.items():
+            #If inactive or active, 3 active neighbors is active
+			if active_neighbors_count == 3:
+				yield cube
+            #If active, 2 remains active
+			elif active_neighbors_count == 2:
+				if cube in active_cubes:
+					yield cube
+    #Get arguments ready
+	active = set(
+		(x, y, 0, )
+		for x, y in arg
+	)
+    #Run 6 times
+	for p in range(6):
+		active = set(tick(active))
+    #Return active positions
+	return len(active)
+
+#Call puzzle function
+print(p1(active))
