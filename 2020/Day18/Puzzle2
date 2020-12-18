@@ -1,6 +1,43 @@
 #!/usr/bin/python3
 
+import re
+
 file = open('input')
-inp = file.read()
+inp = file.read().split('\n')
 file.close()
 
+sum = 0
+ops = []
+val = []
+
+def eval(a,b,op):
+    if(op == "+"):
+        return a+b
+    else:
+        return a*b
+
+
+for p in inp:
+    for s in p:
+        print(val)
+        print(ops)
+        if s == " ":
+            continue
+        if re.findall("[0-9]",s):
+            val.append(int(s))
+            while len(ops) > 0 and  ops[-1] != "(" and ops[-1] != "*":
+                val.append(eval(val.pop(), val.pop(), ops.pop()))
+        if re.findall("[\+*\(]",s):
+            if s != "(":
+                while len(ops) > 0 and  ops[-1] != "(" and ops[-1] != "*":
+                    val.append(eval(val.pop(), val.pop(), ops.pop()))
+            ops.append(s)
+        if re.findall("\)",s):
+            while len(ops) > 0 and  ops[-1] != "(":
+                val.append(eval(val.pop(), val.pop(), ops.pop()))
+            ops.pop()
+    while  len(ops) > 0:
+        val.append(eval(val.pop(), val.pop(), ops.pop()))
+    sum += val.pop()
+
+print(sum)
