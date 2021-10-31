@@ -1,0 +1,18 @@
+#!/usr/bin/python3
+
+file = open('input')
+inp = list(map(int,file.read().split(",")))
+file.close()
+
+inp[1] = 12
+inp[2] = 2
+
+for p in range(0,len(inp),4):
+    if inp[p] == 1:
+        inp[inp[p+3]] = inp[inp[p+1]] + inp[inp[p+2]]
+    if inp[p] == 2:
+        inp[inp[p+3]] = inp[inp[p+1]] * inp[inp[p+2]]
+    if inp[p] == 99:
+        break
+
+print("done")

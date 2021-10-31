@@ -1,6 +1,106 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n\n")
 file.close()
 
+import re, math
+
+p1 = ""
+p2 = ""
+
+p1sides = set()
+p2sides = set()
+
+adjdict = {}
+
+#Find which pieces are connected
+for p in range(len(inp)):
+    p1sides.clear()
+    p1 = inp[p].split('\n')[1:]
+    #Top
+    p1sides.add("".join([x for x in p1[0]]))
+    p1sides.add("".join([x for x in p1[0][::-1]]))
+    #Right
+    p1sides.add("".join([x[-1] for x in p1]))
+    p1sides.add("".join([x[-1] for x in p1[::-1]]))
+    #Bottom
+    p1sides.add("".join([x for x in p1[-1]]))
+    p1sides.add("".join([x for x in p1[-1][::-1]]))
+    #Left
+    p1sides.add("".join([x[0] for x in p1]))
+    p1sides.add("".join([x[0] for x in p1[::-1]]))
+
+    for s in range(p+1,len(inp)):
+        p2sides.clear()
+        p2 = inp[s].split('\n')[1:]
+        #Top
+        p2sides.add("".join([x for x in p2[0]]))
+        p2sides.add("".join([x for x in p2[0][::-1]]))
+        #Right
+        p2sides.add("".join([x[-1] for x in p2]))
+        p2sides.add("".join([x[-1] for x in p2[::-1]]))
+        #Bottom
+        p2sides.add("".join([x for x in p2[-1]]))
+        p2sides.add("".join([x for x in p2[-1][::-1]]))
+        #Left
+        p2sides.add("".join([x[0] for x in p2]))
+        p2sides.add("".join([x[0] for x in p2[::-1]]))
+
+        if(len((p1sides.intersection(p2sides)))):
+            temp = adjdict.get("\n".join(inp[p].split('\n')[1:]),set())
+            temp.add("\n".join(inp[s].split('\n')[1:]))
+            adjdict["\n".join(inp[p].split('\n')[1:])] = temp
+            temp = adjdict.get("\n".join(inp[s].split('\n')[1:]),set())
+            temp.add("\n".join(inp[p].split('\n')[1:]))
+            adjdict["\n".join(inp[s].split('\n')[1:])] = temp
+
+#Grab corner
+start = ""
+for p in adjdict:
+    if(len(adjdict[p]) == 2):
+        start = p
+
+#Assemble puzzle
+used = []
+place = [[0 for s in range(int(math.sqrt(len(inp))))] for p in range(int(math.sqrt(len(inp))))]
+
+#Solve top row
+place[0][0] = start
+used.append(start)
+for p in range(1,int(math.sqrt(len(inp)))):
+    for s in adjdict[place[0][p-1]]:
+        if(len(adjdict[s]) < 4 and not s in used):
+            place[0][p] = s
+            used.append(s)
+            break
+
+#Solve rest
+for p in range(1,int(math.sqrt(len(inp)))):
+    for s in adjdict[place[p-1][0]]:
+        if not s in used:
+            place[p][0] = s
+            used.append(s)
+            break
+    for s in range(1,int(math.sqrt(len(inp)))):
+        temp = adjdict[place[p][s-1]].intersection(adjdict[place[p-1][s]])
+        tile = temp.pop()
+        if(tile in used):
+            tile = temp.pop()
+        place[p][s] = tile
+        used.append(tile)
+
+for p in range(len(place)):
+    for s in range(len(p)):
+        if p == 0 and s == 0:
+            continue
+
+
+#Do the regex instead
+
+water = math.sqrt(len(inp)) * 8
+print(water)
+monster = 20
+pattern = "(?=(#.{"+str(water - monster + 1)+"}#.{4}##.{4}##.{4}###.{"+str(water - monster + 1)+"}#.{2}#.{2}#.{2}#.{2}#.{2}#))"
+
+monsterbits = 15

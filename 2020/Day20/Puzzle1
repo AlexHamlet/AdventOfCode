@@ -1,6 +1,69 @@
 #!/usr/bin/python3
 
 file = open('input')
-inp = file.read()
+inp = file.read().split("\n\n")
 file.close()
 
+dict = {}
+
+p1 = ""
+p2 = ""
+
+p1sides = set()
+p2sides = set()
+
+for p in range(len(inp)):
+    p1sides.clear()
+    p1 = inp[p].split('\n')[1:]
+    #Top
+    p1sides.add("".join([x for x in p1[0]]))
+    p1sides.add("".join([x for x in p1[0][::-1]]))
+    #Right
+    p1sides.add("".join([x[-1] for x in p1]))
+    p1sides.add("".join([x[-1] for x in p1[::-1]]))
+    #Bottom
+    p1sides.add("".join([x for x in p1[-1]]))
+    p1sides.add("".join([x for x in p1[-1][::-1]]))
+    #Left
+    p1sides.add("".join([x[0] for x in p1]))
+    p1sides.add("".join([x[0] for x in p1[::-1]]))
+
+    #print("Piece 1")
+    #print(p1sides)
+    for s in range(p,len(inp)):
+        p2sides.clear()
+        p2 = inp[s].split('\n')[1:]
+        #Top
+        p2sides.add("".join([x for x in p2[0]]))
+        p2sides.add("".join([x for x in p2[0][::-1]]))
+        #Right
+        p2sides.add("".join([x[-1] for x in p2]))
+        p2sides.add("".join([x[-1] for x in p2[::-1]]))
+        #Bottom
+        p2sides.add("".join([x for x in p2[-1]]))
+        p2sides.add("".join([x for x in p2[-1][::-1]]))
+        #Left
+        p2sides.add("".join([x[0] for x in p2]))
+        p2sides.add("".join([x[0] for x in p2[::-1]]))
+
+        if(len((p1sides.intersection(p2sides)))):
+            print(p1sides.intersection(p2sides))
+            print(p1sides)
+            print(p2sides)
+            print("\n")
+            dict[inp[p].split('\n')[0]] = dict.get(inp[p].split('\n')[0], 0) + 1
+            dict[inp[s].split('\n')[0]] = dict.get(inp[s].split('\n')[0], 0) + 1
+    #print("Piece 2")
+    #print(p2sides)
+
+print(dict)
+
+for p in dict.keys():
+    if(dict[p] == 4):
+        print(p)
+
+mult = 1
+for p in dict.keys():
+    if(dict[p] == 4):
+        mult *= int(p[4:-1])
+print(mult)
