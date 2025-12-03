@@ -1,4 +1,5 @@
 use std::fs::read_to_string;
+use std::path::absolute;
 use std::str::Split;
 
 fn main() {
@@ -6,7 +7,9 @@ fn main() {
         read_to_string("./day_01/input.txt").expect("Unable to read input file.");
     let sample_input = text_file_string.trim().split("\n");
     let part_1_result = part_1(&sample_input);
-    println!("Result {part_1_result}")
+    let part_2_result = part_2(&sample_input);
+    println!("Part One Result {part_1_result}");
+    println!("Part Two Result {part_2_result}");
 }
 
 fn part_1(lines: &Split<&str>) -> u32 {
@@ -23,6 +26,35 @@ fn part_1(lines: &Split<&str>) -> u32 {
     count
 }
 
+fn part_2(lines: &Split<&str>) -> i32 {
+    let mut dial_position: i32 = 50;
+    let mut count: i32 = 0;
+    lines.clone().for_each(|line| {
+        println!("1:Dial Pos {dial_position}, Count {count}");
+        let startzero = dial_position == 0;
+        dial_position += parse_line(line);
+        if clamp(dial_position) == 0 {
+            count += 1;
+        } else if dial_position > 99 {
+            if startzero {
+                count += dial_position/ 100;
+            } else {
+                count += dial_position / 100;
+            }
+        } else if dial_position < 0 {
+            if startzero {
+                count += (dial_position) / 100;
+            } else {
+                count -= (dial_position - 99) / 100;
+            }
+        }
+        dial_position = clamp(dial_position);
+        println!("2:Dial Pos {dial_position}, Count {count}")
+    });
+
+    count
+}
+
 fn parse_line(line: &str) -> i32 {
     let dir = line.chars().nth(0).unwrap();
     let dist: &str = &line[1..].trim();
@@ -32,6 +64,10 @@ fn parse_line(line: &str) -> i32 {
         numdist *= -1;
     }
     numdist
+}
+
+fn detect_overflow(num: i32) -> bool {
+    num <= 0 || num > 99
 }
 
 fn clamp(num: i32) -> i32 {
@@ -70,5 +106,13 @@ mod tests {
         let sample_input = text_file_string.trim().split("\n");
         let part_1_result = part_1(&sample_input);
         assert_eq!(part_1_result, 3);
+    }
+
+    #[test]
+    fn part_2_test() {
+        let text_file_string = read_to_string("./input_sample.txt").unwrap();
+        let sample_input = text_file_string.trim().split("\n");
+        let part_2_result = part_2(&sample_input);
+        assert_eq!(part_2_result, 6);
     }
 }
