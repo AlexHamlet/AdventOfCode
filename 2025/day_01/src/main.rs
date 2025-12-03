@@ -31,24 +31,21 @@ fn part_2(lines: &Split<&str>) -> i32 {
     let mut count: i32 = 0;
     lines.clone().for_each(|line| {
         println!("1:Dial Pos {dial_position}, Count {count}");
-        let startzero = dial_position == 0;
-        dial_position += parse_line(line);
-        if clamp(dial_position) == 0 {
-            count += 1;
-        } else if dial_position > 99 {
-            if startzero {
-                count += dial_position/ 100;
-            } else {
-                count += dial_position / 100;
-            }
-        } else if dial_position < 0 {
-            if startzero {
-                count += (dial_position) / 100;
-            } else {
-                count -= (dial_position - 99) / 100;
+        let dist = parse_line(line);
+        for p in 0..dist {
+            dial_position += 1;
+            dial_position = clamp(dial_position);
+            if dial_position == 0 {
+                count += 1;
             }
         }
-        dial_position = clamp(dial_position);
+        for p in dist..0 {
+            dial_position -= 1;
+            dial_position = clamp(dial_position);
+            if dial_position == 0 {
+                count += 1;
+            }
+        }
         println!("2:Dial Pos {dial_position}, Count {count}")
     });
 

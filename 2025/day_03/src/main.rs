@@ -6,6 +6,8 @@ fn main() {
     let sample_input = text_file_string.trim().split("\n");
     let part_1_output = part_1(&sample_input);
     println!("Part 1: {part_1_output}")
+    let part_2_output = part_2(&sample_input);
+    println!("Part 1: {part_2_output}")
 }
 
 fn part_1(lines: &Split<&str>) -> u32 {
@@ -14,11 +16,6 @@ fn part_1(lines: &Split<&str>) -> u32 {
         let mut maxnum = 0;
         for p in 0..line.len() - 2 {
             for s in p+1..line.len() - 1 {
-                // println!(
-                //     "{}{}",
-                //     line.chars().nth(p).expect("Unwrap first char"),
-                //     line.chars().nth(s).expect("Unwrap Second char")
-                // );
                 let jolt = format!(
                     "{}{}",
                     line.chars().nth(p).expect("Unwrap first char"),
@@ -36,4 +33,22 @@ fn part_1(lines: &Split<&str>) -> u32 {
         result += maxnum;
     });
     result
+}
+
+fn part_2(lines: &Split<&str>) -> u64 {
+    let mut result = 0;
+    lines.clone().for_each(|line| {
+        
+    });
+    result
+}
+
+fn part_2_helper(line: &str){
+    //Make bool array?
+
+    //Loop 9..0
+
+    //Loop backwards over list
+
+    //Enable numbers IF there are 12 are not enough numbers after the first enabled OR we are past the first enabled number
 }
