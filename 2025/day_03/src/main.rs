@@ -5,7 +5,7 @@ fn main() {
         read_to_string("./day_03/input.txt").expect("Unable to read input file.");
     let sample_input = text_file_string.trim().split("\n");
     let part_1_output = part_1(&sample_input);
-    println!("Part 1: {part_1_output}")
+    println!("Part 1: {part_1_output}");
     let part_2_output = part_2(&sample_input);
     println!("Part 1: {part_2_output}")
 }
@@ -15,7 +15,7 @@ fn part_1(lines: &Split<&str>) -> u32 {
     lines.clone().for_each(|line| {
         let mut maxnum = 0;
         for p in 0..line.len() - 2 {
-            for s in p+1..line.len() - 1 {
+            for s in p + 1..line.len() - 1 {
                 let jolt = format!(
                     "{}{}",
                     line.chars().nth(p).expect("Unwrap first char"),
@@ -37,13 +37,11 @@ fn part_1(lines: &Split<&str>) -> u32 {
 
 fn part_2(lines: &Split<&str>) -> u64 {
     let mut result = 0;
-    lines.clone().for_each(|line| {
-        
-    });
+    lines.clone().for_each(|line| {});
     result
 }
 
-fn part_2_helper(line: &str){
+fn part_2_helper(line: &str) {
     //Make bool array?
 
     //Loop 9..0
