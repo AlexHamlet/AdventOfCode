@@ -2,7 +2,7 @@ use std::fs::read_to_string;
 
 fn main() {
     let text_file_string =
-        read_to_string("./day_07/input.txt").expect("Unable to read input file.");
+        read_to_string("./day_07/input_sample.txt").expect("Unable to read input file.");
     let sample_input = text_file_string.trim().split("\n");
     let part_1_output = part_1(sample_input.clone());
     println!("Part 1: {part_1_output}");
@@ -17,7 +17,6 @@ fn part_1<'a>(lines: impl Iterator<Item = &'a str>) -> u64 {
     let mut nextlinestate: Vec<bool> = linestate.clone();
     for row in lines {
         for (index, col) in row.chars().enumerate() {
-            println!("Index {index}, col {col}, linestate {}", linestate[index]);
             if col == 'S' {
                 nextlinestate[index] = true;
             } else if col == '^' && linestate[index] {
@@ -27,11 +26,36 @@ fn part_1<'a>(lines: impl Iterator<Item = &'a str>) -> u64 {
                 total += 1;
             }
         }
-        linestate = nextlinestate.clone();
+        //linestate = nextlinestate.clone();
+        // premature optimization that breaks it:
+        //std::mem::swap(&mut linestate, &mut nextlinestate);
+        // postmature optimization:
+        linestate[..].copy_from_slice(&nextlinestate[..]);
+        /*
+        // logically speaking, these do the same thing:
+        for (index, state) in nextlinestate.iter().copied().enumerate() {
+            linestate[index] = state;
+        }
+        for (state, newstate) in linestate.iter_mut().zip(newlinestate.iter()) {
+            *state = *newstate;
+        }
+        */
     }
     total
 }
 
 fn part_2<'a>(lines: impl Iterator<Item = &'a str>) -> u64 {
-    0
+    let lines: Vec<&'a str> = lines.collect();
+    let mut solution_index = 0;
+    let mut linestate: Vec<u64> = vec![1; lines[0].len()];
+    for row in lines.iter().rev() {
+        for (index, col) in row.chars().enumerate() {
+            if col == 'S' {
+                solution_index = index;
+            } else if col == '^' {
+                linestate[index] = linestate[index + 1] + linestate[index - 1]
+            }
+        }
+    }
+    linestate[solution_index]
 }
