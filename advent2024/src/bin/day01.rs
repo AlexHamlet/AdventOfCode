@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use advent2024::CountDupes;
+use tal::CountDupes;
 
 fn main() {
     let mut list1 = Vec::new();

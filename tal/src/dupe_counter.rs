@@ -40,13 +40,12 @@ where
             let new_item = self.iterator.next();
             if new_item.is_some() && new_item == self.current_item {
                 self.current_count += 1;
-            } else if let Some(old_item) = self.current_item.take() {
+            } else {
+                let old_item = self.current_item.take()?;
                 let old_count = self.current_count;
                 self.current_item = new_item;
                 self.current_count = 1;
                 return Some((old_item, old_count));
-            } else {
-                return None;
             }
         }
     }

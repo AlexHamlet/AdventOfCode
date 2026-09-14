@@ -1,4 +1,4 @@
-use advent2024::SkipNth;
+use tal::{ConsecutiveOverlappingPairs, SkipNth};
 
 fn main() {
     let mut lists_of_levels: Vec<Vec<_>> = Vec::new();
@@ -11,7 +11,10 @@ fn main() {
 
     println!(
         "Part 1 solution: {}",
-        lists_of_levels.iter().filter(|x| is_safe_report(x)).count()
+        lists_of_levels
+            .iter()
+            .filter(|x| is_safe_report(x.iter().copied()))
+            .count()
     );
 
     println!(
@@ -24,7 +27,7 @@ fn main() {
 }
 
 fn is_safe_report(levels: impl Iterator<Item = i32> + Clone) -> bool {
-    let levels = levels.consecutive_overlapping_pairs();
+    let mut levels = levels.consecutive_overlapping_pairs();
     let (first, second) = levels.clone().next().unwrap();
     let slope = (second - first).signum();
     levels.all(|(a, b)| {

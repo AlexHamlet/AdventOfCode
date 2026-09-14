@@ -122,3 +122,244 @@ printf("%i %i %i %i %i\n", x, x--, x, x++, x); // 5 5 5 5 5
 
 - If you are going to write `&Vec<T>`, **always** write `&[T]` instead.
 - If you are going to write `&String`, **always** write `&str` instead.
+
+# leaked Rust source code
+
+```rust
+enum Option<T> {
+    None,
+    Some(T),
+}
+
+#[unused_must_use]
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+# Not leaked Rust source code
+
+```rust
+enum InputEvent {
+    KeyboardEvent {
+        char_code: Option<char>,
+        scancode: Option<i32>,
+        is_pressed: bool,
+    },
+    MouseButtonEvent { mouse_button: i32, x: i32, y: i32, is_pressed: bool },
+    MouseMoveEvent { x: i32, y: i32 },
+}
+```
+
+```cs
+enum InputEventType {
+    KEYBOARD_EVENT, MOUSE_BUTTON_EVENT, MOUSE_MOVE_EVENT
+};
+
+class InputEvent {
+    InputEventType type;
+    // ONLY VALID FOR KEYBOARD EVENTS
+    Char char_code;
+    Integer scancode;
+    // ONLY VALID FOR MOUSE EVENTS
+    int x, y;
+    // VALID SPECIFICALLY FOR MOUSE BUTTON EVENTS
+    int mouse_button;
+    // valid for everything except mouse move events
+    bool is_pressed;
+};
+```
+
+```c
+enum InputEventType {
+    KEYBOARD_EVENT, MOUSE_BUTTON_EVENT, MOUSE_MOVE_EVENT
+};
+
+union InputEvent {
+    InputEventType type;
+    KeyboardInputEvent keyboard;
+    MouseButtonEvent mouse_btn;
+    MouseMoveEvent mouse_move;
+}
+
+struct KeyboardInputEvent {
+    InputEventType type;
+    char char_code; // 0 = no character
+    int scancode; // 0 = no key (???)
+    bool is_pressed;
+}
+
+struct MouseButtonEvent {
+    InputEventType type;
+    int x, y;
+    int button;
+    bool is_pressed;
+}
+
+struct MouseMoveEvent {
+    InputEventType type;
+    int x, y;
+}
+```
+
+# how to make a game installer that deletes the hard disk
+
+```sh
+#!/bin/sh
+
+set -e # THIS IS IMPORTANT! this makes it so the script dies if anything fails
+
+echo "Now installing Embers of the Shattered System v2.0."
+
+echo "Uninstalling previous version..."
+cd /usr/games/shattered_system
+rm -rf .
+
+echo "Installing new version..."
+tar xzf ~/Downloads/shattered_system_2.0.tar.gz
+
+echo "All finished :)"
+```
+
+# The Carousel of Traits
+
+Traits you should consider `#[derive(...)]`ing on every new struct/enum you make, and when you would/wouldn't do it (in the canonical order):
+
+- `Debug`: to print a programmer-friendly version of me for debugging purposes
+- `Clone`: if it is *possible* to make a copy
+- `Copy`: if it is *always cheap* and *never incorrect* to make a copy (e.g. a 42 is a 42, but different instances of `File` or `Vec<T>` are different)
+- `PartialEq`: if you can ask the question "are these two values of your type equal?" (`==` operator)
+- `Eq`: if there is no value that is equal to nothing ("no NaNs club")
+- `PartialOrd`: if you can ask the question "which of these two values of your type is smaller?" (`<` and `>`)
+- `Ord`: if there is no value that is not ordered ("no NaNs club" #2)
+- `Hash`: if it would ever make sense to use this type as the key in a `HashMap`
+
+# conversions
+
+```rust
+let foo = 10i16;
+let x = foo as i32; // primitive conversion, everything's fine
+let y = i32::from(foo); // infallible conversion (`From`), everything's fine
+let z = i32::try_from(foo).unwrap(); // fallible conversion (`TryFrom`) which will not fail
+
+let foo = 100_000i32;
+let x = foo as i16; // primitive conversion, WILL CHOP OFF BITS
+let y = i16::from(foo); // infallible conversion NOT AVAILABLE
+let z = i16::try_from(foo).unwrap(); // fallible conversion which fails because the value is out of range
+
+```
+
+# "pointiness"
+
+translation: move it
+
+```
+x' = x + t_x
+y' = y + t_y
+z' = z + t_z
+```
+
+scaling it: resize it
+
+```
+x' = x * s_x
+y' = y * s_y
+z' = z * s_z
+```
+
+rotating it: rotating it (let's pretend only rotation around the Z axis exists)
+
+```
+c = cos(theta)
+s = sin(theta)
+x' = x * c + y * -s
+y' = x * s + y * c
+z' = z
+```
+
+if only there were one notation that would let us describe all three!
+
+```
+x' = x * a + y * b + z * c + d
+y' = x * e + y * f + z * g + h
+z' = x * i + y * j + z * k + l
+```
+
+As far as computer graphics are concerned, that's what matrices are for.
+
+```
+┌         ┐
+│ a b c d │
+│ e f g h │
+│ i j k l │
+└         ┘
+```
+
+is just another way of writing the above.
+
+(matrix rant)
+
+Real matrices don't just have "and then you add a thing" at the end. In order for the real matrix math to work:
+
+
+```
+x' = x * a + y * b + z * c + w * d
+y' = x * e + y * f + z * g + w * h
+z' = x * i + y * j + z * k + w * l
+w' = x * m + y * n + z * o + w * p
+┌         ┐
+│ a b c d │
+│ e f g h │
+│ i j k l │
+│ m n o p │ (typically 0 0 0 1)
+└         ┘
+```
+
+This is called an augmented vector, and Solra calls the `w` coordinate "pointiness".
+
+# how to swap two values in C
+
+```c
+// some algebraic rules regarding XOR:
+// a ^ b ^ b = a
+// a ^ b ^ a = b (same rule)
+void swap_ints(int* a, int* b) {
+    // a := a, b := b
+    *a ^= *b;
+    // a := mix(a,b), b := b
+    *b ^= *a;
+    // a := mix(a,b), b := a
+    *a ^= *b;
+    // a := b, b := a
+}
+```
+
+# how to make Solra sad in C
+
+```c
+// is this callable at compile time? NO
+int my_constant_function();
+// is this callable at compile time? GUESS IS YES, answer is NO
+const int my_constant_function();
+// is this callable at compile time? GUESS IS YES, answer is YES
+constexpr int my_constant_function();
+// is this callable at compile time? GUESS IS NO, answer is SOLRA DOESN'T KNOW
+extern constexpr int my_constant_function();
+// is this callable at compile time? GUESS IS NO, answer is NO
+int my_constant_function() __attribute__((pure));
+// bonus brainfreeze: the first two are the same
+// bonus question: which of those declare a function that must be defined in
+// this file, and which ones declare a function that may be defined in another
+// file?
+// your answer: all of them can be defined in another file
+// CORRECT!
+// this one would have to be defined in this file:
+static int my_constant_function();
+// (one of many meanings of static)
+```
+
+```c
+// the cursed inline keyword that doesn't mean inline
+static inline int sum(int a, int b) { return a+b; }
+```
